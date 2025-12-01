@@ -1,25 +1,25 @@
 import os
 import sys
+import time
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
 sys.path.insert(0, BACKEND_DIR)
 
-import time
 from sqlmodel import select
-from app.db import get_session
+from app.db import get_session, init_db
 from app.models.content import RawQuestion, ContentItem
 
-import openai
+# NEW OpenAI client import
+from openai import OpenAI
 
-from app.db import init_db
+# init DB tables (in case web app didn't run first)
 init_db()
 
-# expects OPENAI_API_KEY in environment
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# create OpenAI client (reads OPENAI_API_KEY from env)
+client = OpenAI()
 
 MAX_ITEMS_PER_RUN = 5  # balanced mode
-
 
 TUTORIAL_SYSTEM_PROMPT = (
     "You are a senior Python backend engineer and educator. "
@@ -49,14 +49,10 @@ Return Markdown only.
 
 
 def generate_markdown(raw: RawQuestion) -> str:
-    if not openai.api_key:
-        raise RuntimeError("OPENAI_API_KEY not set in environment.")
-
     user_prompt = build_user_prompt(raw)
 
-    # If you use the new OpenAI client, adapt accordingly.
-    resp = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
+    resp = client.chat.completions.create(
+        model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"),
         messages=[
             {"role": "system", "content": TUTORIAL_SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
@@ -64,8 +60,7 @@ def generate_markdown(raw: RawQuestion) -> str:
         temperature=0.4,
     )
 
-    md = resp["choices"][0]["message"]["content"]
-    return md
+    return resp.choices[0].message.content
 
 
 def run():
@@ -94,8 +89,7 @@ def run():
                 )
                 session.add(item)
                 raw.status = "processed"
-                # small delay to be gentle with rate limits
-                time.sleep(1)
+                time.sleep(0.5)
             except Exception as e:
                 print(f"[generate_content] Error for raw_id={raw.id}: {e}")
 
