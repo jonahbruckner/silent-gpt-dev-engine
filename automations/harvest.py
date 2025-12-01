@@ -11,6 +11,9 @@ from sqlmodel import select
 from app.db import get_session
 from app.models.content import RawQuestion
 
+from app.db import init_db
+init_db()
+
 STACKOVERFLOW_BASE = "https://api.stackexchange.com/2.3/questions"
 TAGS: List[str] = ["python", "fastapi", "docker", "asyncio"]
 

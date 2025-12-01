@@ -5,6 +5,9 @@ ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
 sys.path.insert(0, BACKEND_DIR)
 
+from app.db import init_db
+init_db()
+
 # from app.db import get_session
 # from app.models.product import Product  # only if you create such a model
 

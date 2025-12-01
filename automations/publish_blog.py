@@ -13,6 +13,8 @@ from app.models.content import ContentItem
 POSTS_DIR = os.path.join(ROOT_DIR, "site", "posts")
 MAX_POSTS_PER_RUN = 3  # balanced: up to 3/day
 
+from app.db import init_db
+init_db()
 
 def slugify(title: str) -> str:
     return (

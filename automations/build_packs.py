@@ -12,6 +12,8 @@ from app.models.content import ContentItem
 
 PACKS_DIR = os.path.join(ROOT_DIR, "content", "packs")
 MIN_ITEMS_PER_TOPIC = 15  # only build packs if enough material
+from app.db import init_db
+init_db()
 
 
 def ensure_dir(path: str):

@@ -10,6 +10,8 @@ from sqlmodel import select
 from app.db import get_session
 from app.models.content import ContentItem
 
+from app.db import init_db
+init_db()
 
 def run():
     with get_session() as session:

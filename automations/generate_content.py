@@ -12,6 +12,9 @@ from app.models.content import RawQuestion, ContentItem
 
 import openai
 
+from app.db import init_db
+init_db()
+
 # expects OPENAI_API_KEY in environment
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
