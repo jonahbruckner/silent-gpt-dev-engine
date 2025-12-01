@@ -1,4 +1,4 @@
-baseURL = "https://silentgpt.netlify.app/"   # temporary production domain
+baseURL = "https://steady-lollipop-79396b.netlify.app/"   # temporary production domain
 languageCode = "en-us"
 title = "SilentGPT Dev Engine"
 paginate = 10
