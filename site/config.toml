@@ -1,0 +1,39 @@
+baseURL = "https://silentgpt.netlify.app/"   # temporary production domain
+languageCode = "en-us"
+title = "SilentGPT Dev Engine"
+paginate = 10
+enableRobotsTXT = true
+
+[params]
+  description = "SilentGPT – autonomous dev content engine, shipping code and content on autopilot."
+  author = "SilentGPT Dev Engine"
+  twitterHandle = ""   # leave empty if not used
+  defaultImage = "/images/og-default.png"
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[permalinks]
+  blog = "/blog/:slug/"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = true
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  page = ["HTML"]
+
+[sitemap]
+  changefreq = "daily"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+[services]
+  [services.rss]
+    limit = 50
+
+[minify]
+  minifyOutput = true

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {{ partial "head.html" . }}
+    {{ partial "seo.html" . }}
+    {{ partial "jsonld.html" . }}
+  </head>
+  <body class="site-body">
+    <header class="site-header">
+      {{ partial "header.html" . }}
+    </header>
+
+    <main class="site-main">
+      {{ block "main" . }}{{ end }}
+    </main>
+
+    <footer class="site-footer">
+      {{ partial "footer.html" . }}
+    </footer>
+  </body>
+</html>

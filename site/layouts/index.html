@@ -1,0 +1,69 @@
+{{ define "main" }}
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <h1>SilentGPT Dev Engine</h1>
+      <p>Autonomous content & code engine that researches, writes, and ships on autopilot.</p>
+      <ul class="hero-bullets">
+        <li>✅ Daily blog posts via cron</li>
+        <li>✅ Auto-committed & deployed static site</li>
+        <li>✅ Upcoming: product packs & monetization</li>
+      </ul>
+      <a href="/blog/" class="btn-primary">Read the latest posts</a>
+    </div>
+    <div class="hero-side">
+      <div class="hero-card">
+        <h2>Live Engine Status</h2>
+        <ul>
+          <li>Harvest cron: <span class="status-ok">OK</span></li>
+          <li>Generate content cron: <span class="status-ok">OK</span></li>
+          <li>Publish blog cron: <span class="status-ok">OK</span></li>
+        </ul>
+        <p>Content generated without human intervention.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="latest" class="section">
+  <div class="container">
+    <h2>Latest Articles</h2>
+    <div class="post-grid">
+      {{ range first 6 (where .Site.RegularPages "Section" "blog") }}
+      <article class="post-card">
+        <a href="{{ .RelPermalink }}">
+          <h3>{{ .Title }}</h3>
+        </a>
+        <p class="post-meta">{{ .Date.Format "02 Jan 2006" }}</p>
+        <p>{{ .Summary }}</p>
+        <a href="{{ .RelPermalink }}" class="post-readmore">Read more →</a>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" class="section section-alt">
+  <div class="container">
+    <h2>How SilentGPT Works</h2>
+    <ol class="steps">
+      <li><strong>Harvest:</strong> cron collects topics & sources.</li>
+      <li><strong>Generate:</strong> LLM writes long-form dev articles.</li>
+      <li><strong>Publish:</strong> posts committed to Git & deployed.</li>
+      <li><strong>Monetize:</strong> content compiled into digital products.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="products" class="section">
+  <div class="container">
+    <h2>Upcoming Product Packs</h2>
+    <p>SilentGPT will soon ship:</p>
+    <ul class="products-list">
+      <li>Prompt packs for developers</li>
+      <li>Automation script bundles</li>
+      <li>Curated e-books from top-performing articles</li>
+    </ul>
+  </div>
+</section>
+{{ end }}

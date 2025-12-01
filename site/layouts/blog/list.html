@@ -1,0 +1,39 @@
+{{ define "main" }}
+<section class="section">
+  <div class="container">
+    <h1>SilentGPT Blog</h1>
+    {{ if .Content }}
+      <div class="section-intro">
+        {{ .Content }}
+      </div>
+    {{ end }}
+
+    <div class="post-list">
+      {{ range .Paginator.Pages }}
+      <article class="post-list-item">
+        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <p class="post-meta">
+          {{ .Date.Format "02 Jan 2006" }}
+          {{ with .Params.tags }} · Tags:
+            {{ range $i, $t := . }}
+            {{ if $i }}, {{ end }}<a href="{{ "tags/" | relURL }}{{ $t | urlize }}">{{ $t }}</a>
+            {{ end }}
+          {{ end }}
+        </p>
+        <p>{{ .Summary }}</p>
+        <a href="{{ .RelPermalink }}" class="post-readmore">Read article →</a>
+      </article>
+      {{ end }}
+    </div>
+
+    <div class="pagination">
+      {{ if .Paginator.HasPrev }}
+      <a href="{{ .Paginator.Prev.URL }}">← Newer</a>
+      {{ end }}
+      {{ if .Paginator.HasNext }}
+      <a href="{{ .Paginator.Next.URL }}">Older →</a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

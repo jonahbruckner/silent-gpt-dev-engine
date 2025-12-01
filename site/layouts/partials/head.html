@@ -1,0 +1,15 @@
+{{- $title := cond .IsHome .Site.Title .Title -}}
+{{- $desc  := cond (isset .Params "description") .Params.description .Site.Params.description -}}
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ $title }} | {{ .Site.Title }}</title>
+<meta name="description" content="{{ $desc }}">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="canonical" href="{{ .Permalink }}">
+<link rel="alternate" type="application/rss+xml" title="{{ .Site.Title }} RSS" href="{{ .Site.BaseURL }}index.xml">
+
+<meta name="generator" content="Hugo {{ hugo.Version }}">
