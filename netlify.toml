@@ -1,0 +1,15 @@
+[build]
+  # Hugo-Projekt liegt im Unterordner "site"
+  base    = "site"
+  command = "hugo"
+  publish = "public"
+
+[build.environment]
+  HUGO_VERSION = "0.134.0"       # oder eine aktuelle Version, muss nur >= extended sein
+  HUGO_ENV     = "production"
+
+# Optional: redirects, falls später nötig
+[[redirects]]
+  from = "/*"
+  to   = "/index.html"
+  status = 200
