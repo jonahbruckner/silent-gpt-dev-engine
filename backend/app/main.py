@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from app.db import init_db
-from app.jobs.scheduler import start_scheduler
+from .db import init_db
+from .jobs.scheduler import start_scheduler
 
 app = FastAPI(title="SilentGPT Dev Engine")
 
