@@ -1,6 +1,7 @@
 {{ define "main" }}
 <article class="single-article">
   <div class="container">
+
     <header class="single-header">
       <h1>{{ .Title }}</h1>
 
@@ -9,8 +10,8 @@
       {{ end }}
     </header>
 
-    {{/* ===== Produkt-CTA nur für type = "products" ===== */}}
-    {{ if eq .Type "products" }}
+    {{/* ===== Product-CTA: erscheint, sobald pack_slug vorhanden ist ===== */}}
+    {{ if .Params.pack_slug }}
       <section class="product-pay-cta">
         {{/* BACKEND_BASE_URL aus Netlify-Env, Fallback auf Render-URL */}}
         {{ $backend := getenv "BACKEND_BASE_URL" | default "https://silent-gpt-backend.onrender.com" }}
@@ -19,25 +20,21 @@
           <p class="product-price">{{ . }}</p>
         {{ end }}
 
-        {{ if .Params.pack_slug }}
-          <a class="product-pay-button"
-             href="{{ $backend }}/pay/{{ .Params.pack_slug }}">
-            Buy this pack
-          </a>
-          <p class="product-pay-hint">
-            Secure checkout via Stripe. Instant download after payment.
-          </p>
-        {{ else }}
-          <p class="product-pay-hint">
-            This pack is not available for purchase yet.
-          </p>
-        {{ end }}
+        <a class="product-pay-button"
+           href="{{ $backend }}/pay/{{ .Params.pack_slug }}">
+          Buy this pack
+        </a>
+
+        <p class="product-pay-hint">
+          Secure checkout via Stripe. Instant download after payment.
+        </p>
       </section>
     {{ end }}
 
     <div class="single-content">
       {{ .Content }}
     </div>
+
   </div>
 </article>
 {{ end }}
