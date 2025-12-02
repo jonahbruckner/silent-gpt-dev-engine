@@ -89,9 +89,14 @@ def run_git_commands(commit_message: str = "auto: new posts"):
         print("[publish_blog] GIT_REMOTE_URL not set – skipping push.")
         return
 
-    print(f"[publish_blog] Setting git remote 'origin' to {remote_url}")
+    print("[publish_blog] Setting git remote 'origin' (URL from GIT_REMOTE_URL).")
     # Falls schon existiert, ignorieren wir den Fehler
-    subprocess.run(["git", "remote", "remove", "origin"], check=False)
+    subprocess.run(
+    ["git", "remote", "remove", "origin"],
+    check=False,
+    stdout=subprocess.DEVNULL,
+    stderr=subprocess.DEVNULL,
+)
     subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
 
     # 7) Push (Branchname ggf. anpassen, falls nicht main)
