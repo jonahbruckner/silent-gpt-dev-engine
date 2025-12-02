@@ -5,7 +5,7 @@
     <header class="single-header">
       <h1>{{ .Title }}</h1>
 
-      {{/* Nur für Nicht-Produkt-Seiten die description im Header anzeigen */}}
+      {{/* Für normale Blog-Posts usw. weiterhin Description im Header anzeigen */}}
       {{ if ne .Type "products" }}
         {{ with .Params.description }}
           <p class="single-description">{{ . }}</p>
@@ -20,6 +20,10 @@
       <section class="product-hero">
         {{ with .Params.description }}
           <p class="product-tagline">{{ . }}</p>
+        {{ end }}
+
+        {{ with .Params.hero_body }}
+          <p class="product-hero-text">{{ . }}</p>
         {{ end }}
 
         <div class="product-pay-cta">
