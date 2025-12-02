@@ -304,3 +304,14 @@ a:hover {
   color: var(--muted);
 }
 
+/* Product hero area */
+
+.product-hero {
+  margin: 1.5rem 0 2.5rem;
+}
+
+.product-tagline {
+  color: var(--muted);
+  max-width: 640px;
+  margin-bottom: 1.2rem;
+}
