@@ -13,6 +13,7 @@ from app.db import get_session
 from app.models.content import ContentItem
 from app.db import init_db
 
+# Hugo erwartet Content unter site/content/<section>
 POSTS_DIR = os.path.join(ROOT_DIR, "site", "content", "blog")
 MAX_POSTS_PER_RUN = 3  # balanced: up to 3/day
 
@@ -34,6 +35,7 @@ def ensure_dir(path: str):
     if not os.path.isdir(path):
         os.makedirs(path, exist_ok=True)
 
+
 def run_git_commands(commit_message: str = "auto: new posts"):
     """
     Setzt git user.name / user.email, committet Änderungen (site/)
@@ -54,7 +56,11 @@ def run_git_commands(commit_message: str = "auto: new posts"):
 
     # 2) Git-Identität setzen – aus ENV, sonst Fallback
     author_name = os.getenv("GIT_AUTHOR_NAME", "SilentGPT Bot")
-    author_email = os.getenv("GIT_AUTHOR_EMAIL", "243322325+jonahbruckner@users.noreply.github.com")
+    author_email = os.getenv(
+        "GIT_AUTHOR_EMAIL",
+        "243322325+jonahbruckner@users.noreply.github.com",
+    )
+
     print(f"[publish_blog] Configuring git user: {author_name} <{author_email}>")
 
     subprocess.run(
@@ -96,13 +102,13 @@ def run_git_commands(commit_message: str = "auto: new posts"):
         return
 
     print("[publish_blog] Setting git remote 'origin' (URL from GIT_REMOTE_URL).")
-    # Falls schon existiert, ignorieren wir den Fehler
+    # Falls schon existiert, entfernen wir ihn leise
     subprocess.run(
-    ["git", "remote", "remove", "origin"],
-    check=False,
-    stdout=subprocess.DEVNULL,
-    stderr=subprocess.DEVNULL,
-)
+        ["git", "remote", "remove", "origin"],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
     subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
 
     # 7) Push (Branchname ggf. anpassen, falls nicht main)
@@ -113,6 +119,7 @@ def run_git_commands(commit_message: str = "auto: new posts"):
     )
 
     print("[publish_blog] Git push completed.")
+
 
 def run():
     ensure_dir(POSTS_DIR)
@@ -137,8 +144,24 @@ def run():
             path = os.path.join(POSTS_DIR, filename)
 
             print(f"[publish_blog] Writing {path}")
+
+            # Hugo-Frontmatter bauen (TOML)
+            title = item.title or f"Post {item.id}"
+            safe_title = title.replace('"', '\\"')
+            front_matter = (
+                "+++\n"
+                f'title = "{safe_title}"\n'
+                f'date = "{created.isoformat()}"\n'
+                f'slug = "{slug}"\n'
+                "+++\n\n"
+            )
+
+            body = (item.body_md or "").strip()
+
             with open(path, "w", encoding="utf-8") as f:
-                f.write(item.body_md or "")
+                f.write(front_matter)
+                f.write(body)
+                f.write("\n")
 
             item.status = "published"
 
