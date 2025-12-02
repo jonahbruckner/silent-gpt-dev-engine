@@ -313,5 +313,13 @@ a:hover {
 .product-tagline {
   color: var(--muted);
   max-width: 640px;
-  margin-bottom: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.product-hero-text {
+  color: var(--fg);
+  max-width: 720px;
+  margin-bottom: 1.6rem;
+  font-size: 0.98rem;
+  line-height: 1.6;
 }
