@@ -2,7 +2,15 @@
 title = "AI & RAG Troubleshooting Pack #1"
 slug = "ai-rag-pack-1"
 date = "2025-12-02T12:00:23.001376+00:00"
-description = "A curated bundle of 7 SilentGPT micro-tutorials on ai rag."
+# 1 Satz – kurze Tagline unter dem Titel
+description = "A curated bundle of 7 SilentGPT micro-tutorials on AI & RAG pipelines."
+# 2–3 Sätze – größere Beschreibung im Hero
+hero_body = """
+Perfect if you're building retrieval-augmented generation systems and need patterns that actually work in production. 
+You’ll get focused micro-tutorials on debugging, monitoring and improving RAG performance, not generic theory. 
+Use this pack as a toolbox you can quickly dip into when something in your pipeline breaks or slows down.
+"""
+
 pack_slug = "ai-rag-pack-1"
 price_label = "8,99 €"
 type = "products"
