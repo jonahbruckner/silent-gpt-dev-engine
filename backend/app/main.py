@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import payments
+from .api import payments
 from .db import init_db
 # from .jobs.scheduler import start_scheduler  # if you have this, else comment it out
 
