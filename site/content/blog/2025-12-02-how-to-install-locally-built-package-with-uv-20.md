@@ -1,3 +1,10 @@
++++
+title = "How to install locally built package with uv"
+date = "2025-12-02T09:57:33Z"
+slug = "how-to-install-locally-built-package-with-uv"
++++
+
+
 # How to Install Locally Built Package with `uv`
 
 When developing Python packages, you may find yourself needing to install a package that you've built locally. This can be particularly useful for testing changes before publishing to a package index like PyPI. In this micro-tutorial, we'll explore how to install a locally built package using `uv` (a hypothetical package for demonstration purposes) and address common pitfalls you might encounter along the way.
