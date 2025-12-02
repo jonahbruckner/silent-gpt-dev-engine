@@ -192,17 +192,23 @@ def build_packs():
 
         pack_items = []
         for item in topic_items:
+            title = (item.title or "").strip()
+            if not title:
+                print(f"[build_packs] Skipping item {item.id} in JSON pack (empty title)")
+                continue
+
             created = item.created_at or datetime.now(timezone.utc)
-            slug = slugify(item.title or f"post-{item.id}")
+            slug = slugify(title or f"post-{item.id}")
             pack_items.append(
                 {
                     "id": item.id,
-                    "title": item.title,
+                    "title": title,
                     "slug": slug,
                     "created_at": created.isoformat(),
                     "url": f"/blog/{slug}/",
                 }
             )
+
 
         pack_data = {
             "pack_slug": pack_slug,
@@ -244,9 +250,14 @@ def build_packs():
         ]
 
         for item in topic_items:
-            slug = slugify(item.title or f"post-{item.id}")
+            title = (item.title or "").strip()
+            if not title:
+                print(f"[build_packs] Skipping item {item.id} in MD list (empty title)")
+                continue
+
+            slug = slugify(title or f"post-{item.id}")
             url = f"/blog/{slug}/"
-            body_lines.append(f"- [{item.title}]({url})")
+            body_lines.append(f"- [{title}]({url})")
 
         body = "\n".join(body_lines) + "\n"
 
