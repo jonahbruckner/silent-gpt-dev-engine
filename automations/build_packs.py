@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+Automated pack builder for SilentGPT Dev Engine.
+
+- Liest veröffentlichte ContentItems aus der DB
+- Gruppiert sie nach groben Themen (Topic-Keywords)
+- Schreibt:
+    - JSON-Packs nach: site/static/packs/<pack_slug>.json
+    - Produktseiten nach: site/content/products/<pack_slug>.md
+- Commited & pusht Änderungen (nur Packs + Products) auf main
+
+Dieses Skript läuft bei dir auf Render als eigener Job (build_packs)
+und kann auch lokal ausgeführt werden, wenn DATABASE_URL gesetzt ist.
+"""
+
 import os
 import sys
 from datetime import datetime, timezone
@@ -5,7 +20,6 @@ from typing import Dict, List
 import subprocess
 import json
 from pathlib import Path
-import zipfile
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
@@ -19,7 +33,6 @@ from app.db import init_db
 # Wohin geschrieben wird
 STATIC_PACKS_DIR = os.path.join(ROOT_DIR, "site", "static", "packs")
 PRODUCTS_DIR = os.path.join(ROOT_DIR, "site", "content", "products")
-STATIC_DOWNLOADS_DIR = os.path.join(ROOT_DIR, "site", "static", "downloads")  # NEU
 
 # Mindestanzahl Artikel pro Pack
 MIN_ITEMS_PER_PACK = 5
@@ -41,6 +54,9 @@ def slugify(text: str) -> str:
         .replace("#", "")
         .replace(":", "")
         .replace(",", "")
+        .replace("’", "")
+        .replace("“", "")
+        .replace("”", "")
     )
 
 
@@ -63,6 +79,83 @@ TOPIC_KEYWORDS: Dict[str, List[str]] = {
     "ai-rag": ["rag", "langchain", "vector", "embedding", "llm"],
     "devops-docker": ["docker", "kubernetes", "container", "deploy"],
     "testing": ["pytest", "unit test", "testing"],
+}
+
+# Pack-Metadaten pro Topic:
+# - pack_title: H1 Titel & JSON title
+# - short_description: wird in Frontmatter als description verwendet (1 Satz)
+# - long_description: steht im Body unter der H1 (3+ Sätze, Marketing)
+# - price_label: wird im Frontmatter genutzt und im Layout angezeigt
+PACK_META: Dict[str, Dict[str, str]] = {
+    "ai-rag": {
+        "pack_title": "AI & RAG Troubleshooting Pack #1",
+        "short_description": (
+            "A curated bundle of SilentGPT micro-tutorials for debugging and improving "
+            "your retrieval-augmented generation systems."
+        ),
+        "long_description": (
+            "This pack gives you a focused collection of real-world RAG issues and their fixes. "
+            "Du lernst, wie du Embeddings, Vektorsuche, Kontextfenster und Prompting aufeinander "
+            "abstimmst, um stabile Antworten zu bekommen – statt zufälliger Halluzinationen. "
+            "Ideal, wenn du an produktionsnahen RAG-Pipelines arbeitest und weniger Zeit mit "
+            "Trial-and-Error verschwenden willst."
+        ),
+        "price_label": "8,99 €",
+    },
+    "fastapi-backend": {
+        "pack_title": "FastAPI Backend Pack #1",
+        "short_description": (
+            "Patterns and recipes for shipping production-ready FastAPI services faster."
+        ),
+        "long_description": (
+            "Dieses Pack bündelt Best Practices für FastAPI-Backends, von Routing und Settings "
+            "über Background-Jobs bis hin zur Integration mit Datenbanken und externen Services. "
+            "Du bekommst konkrete Snippets und Lösungswege, die in echten Projekten funktionieren, "
+            "statt generischer Hello-World-Beispiele. Perfekt, wenn du dein nächstes Backend "
+            "stabil und wartbar aufsetzen willst."
+        ),
+        "price_label": "8,99 €",
+    },
+    "python-data": {
+        "pack_title": "Python Data Engineering Pack #1",
+        "short_description": (
+            "SilentGPT micro-tutorials for cleaning, transforming and automating data workflows in Python."
+        ),
+        "long_description": (
+            "Dieses Pack fokussiert sich auf typische Data-Engineering-Alltagsaufgaben mit Python: "
+            "Daten einlesen, bereinigen, transformieren, validieren und automatisiert weiterverarbeiten. "
+            "Die Beispiele sind praxisnah gehalten und orientieren sich an wiederkehrenden Problemen, "
+            "die in BI-, Analytics- und Engineering-Teams ständig auftauchen. Ideal, wenn du deine "
+            "Daten-Pipelines robuster und automatisierter machen willst."
+        ),
+        "price_label": "8,99 €",
+    },
+    "devops-docker": {
+        "pack_title": "DevOps & Docker Pack #1",
+        "short_description": (
+            "A compact set of Docker and deployment patterns for modern backend services."
+        ),
+        "long_description": (
+            "Hier findest du kompakte How-tos rund um Containerisierung, lokale Entwicklungsumgebungen "
+            "und einfache Deployment-Setups. Der Fokus liegt darauf, Services reproduzierbar zu machen, "
+            "statt sie jedes Mal manuell zu konfigurieren. Ideal für Entwickler:innen, die ihre Projekte "
+            "ohne großen Overhead bereitstellen möchten."
+        ),
+        "price_label": "8,99 €",
+    },
+    "testing": {
+        "pack_title": "Testing & Pytest Pack #1",
+        "short_description": (
+            "Practical testing patterns with pytest to make your Python code more reliable."
+        ),
+        "long_description": (
+            "Dieses Pack vermittelt dir praxiserprobte Patterns für Tests mit pytest: von einfachen "
+            "Unit-Tests über Fixtures bis hin zu strukturierten Test-Suiten für größere Projekte. "
+            "Du lernst, wie du Tests so schreibst, dass sie dir wirklich helfen, statt nur Pflichtprogramm "
+            "für das CI zu sein."
+        ),
+        "price_label": "8,99 €",
+    },
 }
 
 
@@ -89,51 +182,6 @@ def fetch_published_items(limit: int = 200) -> List[ContentItem]:
         )
         return session.exec(q).all()
 
-def build_zip_packs():
-    """
-    Erzeugt für alle vorhandenen JSON-Packs ein ZIP in site/static/downloads.
-    Struktur:
-      downloads/<slug>.zip
-        <slug>.json
-        <slug>.md (falls vorhanden)
-    """
-    print("[build_packs] Building ZIP packs...")
-
-    ensure_dir(STATIC_DOWNLOADS_DIR)
-
-    if not os.path.isdir(STATIC_PACKS_DIR):
-        print(f"[build_packs] PACKS_DIR {STATIC_PACKS_DIR} existiert nicht – breche ZIP-Build ab.")
-        return
-
-    json_files = [f for f in os.listdir(STATIC_PACKS_DIR) if f.endswith(".json")]
-    if not json_files:
-        print(f"[build_packs] Keine JSON-Packs in {STATIC_PACKS_DIR} gefunden – nichts zu tun.")
-        return
-
-    for filename in json_files:
-        slug = filename[:-5]  # ".json" abschneiden
-        json_path = os.path.join(STATIC_PACKS_DIR, filename)
-        md_path = os.path.join(PRODUCTS_DIR, f"{slug}.md")
-        zip_path = os.path.join(STATIC_DOWNLOADS_DIR, f"{slug}.zip")
-
-        print(f"[build_packs] Erzeuge ZIP für Pack '{slug}' -> {zip_path}")
-
-        try:
-            with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-                # JSON ins ZIP
-                zf.write(json_path, arcname=f"{slug}.json")
-
-                # Markdown-Produktseite ins ZIP (falls vorhanden)
-                if os.path.isfile(md_path):
-                    zf.write(md_path, arcname=f"{slug}.md")
-                else:
-                    print(f"[build_packs] Warnung: Kein Markdown für {slug} gefunden ({md_path})")
-
-            size_kb = os.path.getsize(zip_path) / 1024
-            print(f"[build_packs] ZIP erstellt: {zip_path} ({size_kb:.1f} KB)")
-
-        except Exception as e:
-            print(f"[build_packs] Fehler beim Erzeugen von {zip_path}: {e}")
 
 def run_git_commands(commit_message: str = "auto: update packs"):
     """
@@ -158,15 +206,9 @@ def run_git_commands(commit_message: str = "auto: update packs"):
     subprocess.run(["git", "config", "user.email", author_email], check=True)
 
     # Nur Packs/Products adden
-    print("[build_packs] Adding packs/products/downloads to git...")
+    print("[build_packs] Adding packs/products to git...")
     subprocess.run(
-        [
-            "git",
-            "add",
-            "site/static/packs",
-            "site/content/products",
-            "site/static/downloads",
-        ],
+        ["git", "add", "site/static/packs", "site/content/products"],
         check=True,
     )
 
@@ -240,18 +282,18 @@ def build_packs():
 
         topic_slug = slugify(topic)
         pack_slug = f"{topic_slug}-pack-1"
-        pack_title = {
-            "python-data": "Python Data Engineering Pack #1",
-            "fastapi-backend": "FastAPI Backend Pack #1",
-            "ai-rag": "AI & RAG Troubleshooting Pack #1",
-            "devops-docker": "DevOps & Docker Pack #1",
-            "testing": "Testing & Pytest Pack #1",
-        }.get(topic, f"{topic.title()} Pack #1")
 
-        description = (
-            f"A curated bundle of {len(topic_items)} SilentGPT micro-tutorials "
-            f"on {topic.replace('-', ' ')}."
+        meta = PACK_META.get(topic, {})
+        pack_title = meta.get("pack_title") or f"{topic.title()} Pack #1"
+        short_desc = meta.get(
+            "short_description",
+            f"A curated bundle of {len(topic_items)} SilentGPT micro-tutorials on {topic.replace('-', ' ')}.",
         )
+        long_desc = meta.get(
+            "long_description",
+            short_desc,
+        )
+        price_label = meta.get("price_label", "8,99 €")
 
         # JSON-Pack
         json_path = os.path.join(STATIC_PACKS_DIR, f"{pack_slug}.json")
@@ -279,7 +321,9 @@ def build_packs():
             "pack_slug": pack_slug,
             "topic": topic,
             "title": pack_title,
-            "description": description,
+            "description": short_desc,
+            "long_description": long_desc,
+            "price_label": price_label,
             "generated_at": now_iso,
             "items": pack_items,
         }
@@ -292,7 +336,7 @@ def build_packs():
         # Product-Page (Markdown)
         md_path = os.path.join(PRODUCTS_DIR, f"{pack_slug}.md")
         safe_title = pack_title.replace('"', '\\"')
-        safe_desc = description.replace('"', '\\"')
+        safe_desc = short_desc.replace('"', '\\"')
 
         front_matter_lines = [
             "+++",
@@ -301,6 +345,9 @@ def build_packs():
             f'date = "{now_iso}"',
             f'description = "{safe_desc}"',
             f'pack_slug = "{pack_slug}"',
+            f'topic = "{topic}"',
+            f'price_label = "{price_label}"',
+            'type = "products"',
             "+++",
             "",
         ]
@@ -308,7 +355,7 @@ def build_packs():
         body_lines = [
             f"# {pack_title}",
             "",
-            description,
+            long_desc,
             "",
             "## Included articles",
             "",
@@ -337,9 +384,6 @@ def build_packs():
     print(f"[build_packs] Done. Generated {generated_packs} packs.")
 
     if generated_packs > 0:
-        # NEU: ZIPs bauen, bevor wir committen
-        build_zip_packs()
-
         try:
             run_git_commands()
         except Exception as e:
