@@ -6,7 +6,7 @@ slug = "thank-you"
 {{< rawhtml >}}
 <style>
 .thankyou-outer {
-  min-height: 50vh;
+  min-height: 40vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
