@@ -4,6 +4,7 @@ date = ""
 slug = "thank-you"
 +++
 
+{{< rawhtml >}}
 <style>
 .thankyou-outer {
   min-height: 80vh;
@@ -226,7 +227,6 @@ slug = "thank-you"
   const pack = params.get("pack");
   const sessionId = params.get("session_id");
 
-  // Mapping: slug -> Name & individuelle Message
   const PACKS = {
     "ai-rag-pack-1": {
       name: "AI & RAG Troubleshooting Pack #1",
@@ -269,13 +269,10 @@ slug = "thank-you"
   if (msgEl) msgEl.textContent = packInfo.message;
   if (slugEl) slugEl.textContent = pack || "–";
 
-  // A/B Variant
+  // A/B Variante
   const root = document.getElementById("ty-root");
   const variant = Math.random() < 0.5 ? "A" : "B";
-  if (root) {
-    root.dataset.variant = variant;
-  }
-  console.log("Thank-you variant:", variant);
+  if (root) root.dataset.variant = variant;
 
   // Download handling
   if (!pack || !sessionId) {
@@ -297,16 +294,14 @@ slug = "thank-you"
     encodeURIComponent(sessionId);
 
   const link = document.getElementById("download-link");
-  if (link) {
-    link.href = downloadUrl;
-  }
+  if (link) link.href = downloadUrl;
 
-  // Auto-Download nach kurzer Pause
+  // Auto-Download
   setTimeout(function () {
     window.location.href = downloadUrl;
   }, 1000);
 
-  // Redirect zurück zum Blog mit Countdown
+  // Redirect zurück zum Blog
   const redirectTotal = 20;
   let remaining = redirectTotal;
   let cancelled = false;
@@ -314,7 +309,6 @@ slug = "thank-you"
   const counterEl = document.getElementById("redirect-counter");
   const rowEl = document.getElementById("redirect-row");
   const cancelBtn = document.getElementById("redirect-cancel");
-
   if (counterEl) counterEl.textContent = String(remaining);
 
   const timer = setInterval(function () {
@@ -325,10 +319,7 @@ slug = "thank-you"
     remaining -= 1;
     if (remaining <= 0) {
       clearInterval(timer);
-      if (!cancelled) {
-        // relative URL, funktioniert auch bei anderem Domainnamen
-        window.location.href = "/blog/";
-      }
+      if (!cancelled) window.location.href = "/blog/";
     } else if (counterEl) {
       counterEl.textContent = String(remaining);
     }
@@ -345,3 +336,4 @@ slug = "thank-you"
   }
 })();
 </script>
+{{< /rawhtml >}}
