@@ -1,4 +1,5 @@
 +++
+title = "AI & RAG Troubleshooting Pack #1"
 slug = "ai-rag-pack-1"
 date = "2025-12-02T12:00:23.001376+00:00"
 description = "A curated bundle of 7 SilentGPT micro-tutorials on ai rag."
@@ -6,9 +7,6 @@ pack_slug = "ai-rag-pack-1"
 price_label = "8,99 €"
 type = "products"
 +++
-# AI & RAG Troubleshooting Pack #1
-
-A curated bundle of 7 SilentGPT micro-tutorials on ai rag.
 
 ## Included articles
 
