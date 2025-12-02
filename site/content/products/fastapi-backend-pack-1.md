@@ -1,11 +1,20 @@
 +++
 title = "FastAPI Backend Pack #1"
 slug = "fastapi-backend-pack-1"
-date = "2025-12-02T12:00:23.001376+00:00"
-description = "A curated bundle of 11 SilentGPT micro-tutorials on fastapi backend."
+date = "2025-12-02T12:00:00Z" # deinen bestehenden Wert verwenden
+description = "A curated bundle of 11 SilentGPT micro-tutorials on FastAPI backend development."
+
+hero_body = """
+Great if you want to ship production-ready FastAPI services without reinventing the wheel every time. 
+The pack covers routing, settings, background tasks, auth patterns and deployment-friendly project structure. 
+Use it as a reference when you spin up new APIs or need a solid pattern for your next microservice.
+"""
+
 pack_slug = "fastapi-backend-pack-1"
 price_label = "8,99 €"
+type = "products"
 +++
+
 # FastAPI Backend Pack #1
 
 A curated bundle of 11 SilentGPT micro-tutorials on fastapi backend.
