@@ -18,8 +18,9 @@ enableRobotsTXT = true
   blog = "/blog/:slug/"
 
 [markup]
-  [markup.goldmark.renderer]
-    unsafe = true
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
