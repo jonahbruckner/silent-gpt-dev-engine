@@ -1,7 +1,9 @@
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List
+import subprocess
+import json
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
@@ -35,6 +37,7 @@ def slugify(text: str) -> str:
         .replace("?", "")
         .replace("#", "")
         .replace(":", "")
+        .replace(",", "")
     )
 
 
@@ -72,6 +75,68 @@ def fetch_published_items(limit: int = 200) -> List[ContentItem]:
         return session.exec(q).all()
 
 
+def run_git_commands(commit_message: str = "auto: update packs"):
+    """
+    Commit & Push NUR der Änderungen unter site/static/packs und site/content/products.
+    """
+
+    repo_root = ROOT_DIR
+    os.chdir(repo_root)
+    print(f"[build_packs] Changed working directory to {repo_root}")
+
+    # Auf main arbeiten
+    subprocess.run(["git", "checkout", "-B", "main"], check=True)
+
+    author_name = os.getenv("GIT_AUTHOR_NAME", "SilentGPT Bot")
+    author_email = os.getenv(
+        "GIT_AUTHOR_EMAIL",
+        "243322325+jonahbruckner@users.noreply.github.com",
+    )
+
+    print(f"[build_packs] Configuring git user: {author_name} <{author_email}>")
+    subprocess.run(["git", "config", "user.name", author_name], check=True)
+    subprocess.run(["git", "config", "user.email", author_email], check=True)
+
+    # Nur Packs/Products adden
+    print("[build_packs] Adding packs/products to git...")
+    subprocess.run(
+        ["git", "add", "site/static/packs", "site/content/products"],
+        check=True,
+    )
+
+    # Gibt es überhaupt Änderungen?
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    if not status.stdout.strip():
+        print("[build_packs] No changes to commit, skipping push.")
+        return
+
+    print(f"[build_packs] Committing with message: {commit_message!r}")
+    subprocess.run(["git", "commit", "-m", commit_message], check=True)
+
+    remote_url = os.getenv("GIT_REMOTE_URL")
+    if not remote_url:
+        print("[build_packs] GIT_REMOTE_URL not set – skipping push.")
+        return
+
+    print("[build_packs] Setting git remote 'origin' (URL from GIT_REMOTE_URL).")
+    subprocess.run(
+        ["git", "remote", "remove", "origin"],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
+
+    print("[build_packs] Pushing to origin main...")
+    subprocess.run(["git", "push", "origin", "main"], check=True)
+    print("[build_packs] Git push completed.")
+
+
 def build_packs():
     print("[build_packs] Starting...")
     ensure_dir(STATIC_PACKS_DIR)
@@ -83,7 +148,6 @@ def build_packs():
         print("[build_packs] No published items found, nothing to do.")
         return
 
-    # Bucket: topic -> list[ContentItem]
     buckets: Dict[str, List[ContentItem]] = {}
 
     for item in items:
@@ -98,6 +162,7 @@ def build_packs():
         return
 
     generated_packs = 0
+    now_iso = datetime.now(timezone.utc).isoformat()
 
     for topic, topic_items in buckets.items():
         if len(topic_items) < MIN_ITEMS_PER_PACK:
@@ -107,7 +172,6 @@ def build_packs():
             )
             continue
 
-        # Für jetzt: ein Pack pro Topic
         topic_slug = slugify(topic)
         pack_slug = f"{topic_slug}-pack-1"
         pack_title = {
@@ -123,12 +187,12 @@ def build_packs():
             f"on {topic.replace('-', ' ')}."
         )
 
-        # JSON-Datei für Programmatische Nutzung
+        # JSON-Pack
         json_path = os.path.join(STATIC_PACKS_DIR, f"{pack_slug}.json")
 
         pack_items = []
         for item in topic_items:
-            created = item.created_at or datetime.utcnow()
+            created = item.created_at or datetime.now(timezone.utc)
             slug = slugify(item.title or f"post-{item.id}")
             pack_items.append(
                 {
@@ -140,14 +204,12 @@ def build_packs():
                 }
             )
 
-        import json
-
         pack_data = {
             "pack_slug": pack_slug,
             "topic": topic,
             "title": pack_title,
             "description": description,
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": now_iso,
             "items": pack_items,
         }
 
@@ -156,7 +218,7 @@ def build_packs():
 
         print(f"[build_packs] Wrote JSON pack: {json_path}")
 
-        # Markdown-Product-Page für Hugo unter /products
+        # Product-Page (Markdown)
         md_path = os.path.join(PRODUCTS_DIR, f"{pack_slug}.md")
         safe_title = pack_title.replace('"', '\\"')
         safe_desc = description.replace('"', '\\"')
@@ -165,7 +227,7 @@ def build_packs():
             "+++",
             f'title = "{safe_title}"',
             f'slug = "{pack_slug}"',
-            f'date = "{datetime.utcnow().isoformat()}"',
+            f'date = "{now_iso}"',
             f'description = "{safe_desc}"',
             f'pack_slug = "{pack_slug}"',
             "+++",
@@ -196,6 +258,12 @@ def build_packs():
         generated_packs += 1
 
     print(f"[build_packs] Done. Generated {generated_packs} packs.")
+
+    if generated_packs > 0:
+        try:
+            run_git_commands()
+        except Exception as e:
+            print(f"[build_packs] Git push failed: {e}")
 
 
 if __name__ == "__main__":
