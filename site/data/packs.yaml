@@ -1,0 +1,30 @@
+- slug: "ai-rag-pack-1"
+  title: "AI & RAG Troubleshooting Pack #1"
+  price_label: "8,99 €"
+  short_description: "A curated bundle of 7 SilentGPT micro-tutorials on AI & RAG pipelines."
+  long_description: >
+    Perfect if you're building retrieval-augmented generation systems and need patterns
+    that actually work in production. You'll get focused micro-tutorials on debugging,
+    monitoring and improving RAG performance, not generic theory. Use this pack as a
+    toolbox you can quickly dip into when something in your pipeline breaks or slows down.
+  article_slugs:
+    - "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing"
+    - "fastapi-performance-enhancement-with-snowflake"
+    - "speed-up-langgraph-react-+-rag.(multi-agent-chatbot)"
+    - "can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks"
+    - "convert-this-date-time-format-into-pandas-datetime"
+    - "how-to-edit-replace-text-in-a-pdf-without-changing-formatting"
+    - "implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically"
+
+- slug: "python-data-pack-1"
+  title: "Python Data Engineering Pack #1"
+  price_label: "8,99 €"
+  short_description: "A curated bundle of 27 SilentGPT micro-tutorials on Python data workflows."
+  long_description: >
+    Perfect if you're building data pipelines, automation scripts or internal tools in
+    Python. You'll get hands-on micro-tutorials on cleaning, validating and transforming
+    data – plus patterns for reporting and small data apps. Use this pack as a grab-and-go
+    toolbox whenever you need a proven snippet instead of digging through docs for an hour.
+  article_slugs:
+    - "similar-approach-for-allowed_host-ip-whitelist-filtering-in-django-but-in-fastapi"
+    - ...
