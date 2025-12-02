@@ -45,10 +45,16 @@ def run_git_commands(commit_message: str = "auto: new posts"):
     os.chdir(repo_root)
     print(f"[publish_blog] Changed working directory to {repo_root}")
 
+    # 1b) Sicherstellen, dass wir auf dem Branch 'main' sind
+    # -B: Branch 'main' erstellen oder auf aktuellen HEAD setzen
+    subprocess.run(
+        ["git", "checkout", "-B", "main"],
+        check=True,
+    )
+
     # 2) Git-Identität setzen – aus ENV, sonst Fallback
     author_name = os.getenv("GIT_AUTHOR_NAME", "SilentGPT Bot")
     author_email = os.getenv("GIT_AUTHOR_EMAIL", "243322325+jonahbruckner@users.noreply.github.com")
-
     print(f"[publish_blog] Configuring git user: {author_name} <{author_email}>")
 
     subprocess.run(
