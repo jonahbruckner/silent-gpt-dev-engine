@@ -58,8 +58,8 @@ async def create_checkout_and_redirect(pack_slug: str):
             ],
             metadata={"pack_slug": pack_slug},
             success_url=(
-                f"{BACKEND_BASE_URL}/download/{pack_slug}"
-                "?session_id={{CHECKOUT_SESSION_ID}}"
+                f"{PUBLIC_SITE_URL}/thank-you/"
+                f"?pack={pack_slug}&session_id={{CHECKOUT_SESSION_ID}}"
             ),
             cancel_url=f"{PUBLIC_SITE_URL}/products/{pack_slug}/",
         )
