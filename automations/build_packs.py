@@ -41,13 +41,16 @@ def slugify(text: str) -> str:
     )
 
 
-def escape_markdown(text: str) -> str:
+def html_escape(text: str) -> str:
     """
-    Escaped Sonderzeichen, damit sie Markdown-Links nicht kaputt machen.
+    Sehr einfacher HTML-Escape für Inline-Links.
     """
-    for ch in ["[", "]", "(", ")"]:
-        text = text.replace(ch, f"\\{ch}")
-    return text
+    return (
+        text.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
 
 
 # Sehr einfache Keyword-Heuristik für Themen
@@ -265,8 +268,8 @@ def build_packs():
 
             slug = slugify(title or f"post-{item.id}")
             url = f"/blog/{slug}/"
-            safe_title_md = escape_markdown(title)
-            body_lines.append(f"- [{safe_title_md}]({url})")
+            safe_title_html = html_escape(title)
+            body_lines.append(f'- <a href="{url}">{safe_title_html}</a>')
 
         body = "\n".join(body_lines) + "\n"
 
