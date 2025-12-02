@@ -2,38 +2,34 @@
 <section class="section">
   <div class="container">
     <h1>SilentGPT Blog</h1>
-    {{ if .Content }}
-      <div class="section-intro">
-        {{ .Content }}
-      </div>
-    {{ end }}
 
-    <div class="post-list">
-      {{ range .Paginator.Pages }}
+    {{ range .Paginator.Pages }}
       <article class="post-list-item">
-        <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+        <h2>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+
         <p class="post-meta">
           {{ .Date.Format "02 Jan 2006" }}
-          {{ with .Params.tags }} · Tags:
-            {{ range $i, $t := . }}
-            {{ if $i }}, {{ end }}<a href="{{ "tags/" | relURL }}{{ $t | urlize }}">{{ $t }}</a>
-            {{ end }}
-          {{ end }}
         </p>
-        <p>{{ .Summary }}</p>
-        <a href="{{ .RelPermalink }}" class="post-readmore">Read article →</a>
-      </article>
-      {{ end }}
-    </div>
 
-    <div class="pagination">
-      {{ if .Paginator.HasPrev }}
-      <a href="{{ .Paginator.Prev.URL }}">← Newer</a>
-      {{ end }}
-      {{ if .Paginator.HasNext }}
-      <a href="{{ .Paginator.Next.URL }}">Older →</a>
-      {{ end }}
-    </div>
+        {{/* Beschreibung aus Frontmatter > Summary */}}
+        {{ if .Params.description }}
+          <p class="post-excerpt">
+            {{ .Params.description }}
+          </p>
+        {{ else }}
+          {{ $summary := .Summary | replaceRE `(?s)^[\n\r\t ]*<h1[^>]*>.*?</h1>` "" }}
+          <p class="post-excerpt">
+            {{ $summary | plainify }}
+          </p>
+        {{ end }}
+
+        <a class="post-readmore" href="{{ .RelPermalink }}">
+          Read article →
+        </a>
+      </article>
+    {{ end }}
   </div>
 </section>
 {{ end }}
