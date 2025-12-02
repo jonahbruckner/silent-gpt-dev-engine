@@ -3,14 +3,17 @@
   <div class="container">
     <header class="single-header">
       <h1>{{ .Title }}</h1>
-      <p class="post-meta">
-        {{ .Date.Format "02 Jan 2006" }}
-        {{ with .Params.tags }} · Tags:
-          {{ range $i, $t := . }}
-          {{ if $i }}, {{ end }}<a href="{{ "tags/" | relURL }}{{ $t | urlize }}">{{ $t }}</a>
+      {{ if ne .File.ContentBaseName "thank-you" }}
+        <p class="post-meta">
+          {{ .Date.Format "02 Jan 2006" }}
+          {{ with .Params.tags }} · Tags:
+            {{ range $i, $t := . }}
+              {{ if $i }}, {{ end }}<a href="{{ "tags/" | relURL }}{{ $t | urlize }}">{{ $t }}</a>
+            {{ end }}
           {{ end }}
-        {{ end }}
-      </p>
+        </p>
+      {{ end }}
+
       {{ with .Params.description }}
       <p class="single-description">{{ . }}</p>
       {{ end }}
