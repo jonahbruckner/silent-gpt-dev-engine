@@ -31,6 +31,7 @@ DOWNLOADS_DIR = ROOT_DIR / "site" / "static" / "downloads"
 
 
 @router.get("/pay/{pack_slug}")
+
 async def create_checkout_and_redirect(pack_slug: str):
     if not STRIPE_SECRET_KEY:
         # Stripe ist auf diesem Service nicht konfiguriert.
