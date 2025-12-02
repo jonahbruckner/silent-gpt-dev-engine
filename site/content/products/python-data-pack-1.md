@@ -1,11 +1,20 @@
 +++
 title = "Python Data Engineering Pack #1"
 slug = "python-data-pack-1"
-date = "2025-12-02T12:00:23.001376+00:00"
-description = "A curated bundle of 27 SilentGPT micro-tutorials on python data."
+date = "2025-12-02T12:00:00Z" # ← deinen bestehenden Wert hier lassen
+description = "A curated bundle of 27 SilentGPT micro-tutorials on Python data workflows."
+
+hero_body = """
+Perfect if you're building data pipelines, automation scripts or internal tools in Python. 
+You’ll get hands-on micro-tutorials on cleaning, validating and transforming data – plus patterns for reporting and small data apps. 
+Use this pack as a grab-and-go toolbox whenever you need a proven snippet instead of searching the docs for an hour.
+"""
+
 pack_slug = "python-data-pack-1"
 price_label = "8,99 €"
+type = "products"
 +++
+
 # Python Data Engineering Pack #1
 
 A curated bundle of 27 SilentGPT micro-tutorials on python data.
