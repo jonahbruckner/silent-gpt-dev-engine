@@ -1,0 +1,35 @@
+{{ define "main" }}
+  <section class="section">
+    <div class="container">
+      {{/* Oberer Text aus content/products/_index.md */}}
+      <div class="mb-12">
+        {{ .Content }}
+      </div>
+
+      <h2 class="text-2xl font-semibold mb-6">Available Product Packs</h2>
+
+      {{ if .Pages }}
+        <div class="grid gap-6 md:grid-cols-2">
+          {{ range .Pages.ByDate.Reverse }}
+            <article class="p-6 rounded-2xl shadow-md bg-surface/60">
+              <h3 class="text-xl font-semibold mb-2">
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </h3>
+              {{ with .Params.description }}
+                <p class="text-sm opacity-80 mb-4">{{ . }}</p>
+              {{ end }}
+              <a class="inline-flex items-center text-sm font-medium"
+                 href="{{ .RelPermalink }}">
+                View pack →
+              </a>
+            </article>
+          {{ end }}
+        </div>
+      {{ else }}
+        <p class="opacity-80 mt-4">
+          No product packs generated yet. Check back soon.
+        </p>
+      {{ end }}
+    </div>
+  </section>
+{{ end }}
