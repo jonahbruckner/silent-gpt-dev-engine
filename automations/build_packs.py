@@ -41,6 +41,15 @@ def slugify(text: str) -> str:
     )
 
 
+def escape_markdown(text: str) -> str:
+    """
+    Escaped Sonderzeichen, damit sie Markdown-Links nicht kaputt machen.
+    """
+    for ch in ["[", "]", "(", ")"]:
+        text = text.replace(ch, f"\\{ch}")
+    return text
+
+
 # Sehr einfache Keyword-Heuristik für Themen
 TOPIC_KEYWORDS: Dict[str, List[str]] = {
     "python-data": ["python", "pandas", "numpy", "dataframe"],
@@ -209,7 +218,6 @@ def build_packs():
                 }
             )
 
-
         pack_data = {
             "pack_slug": pack_slug,
             "topic": topic,
@@ -257,7 +265,8 @@ def build_packs():
 
             slug = slugify(title or f"post-{item.id}")
             url = f"/blog/{slug}/"
-            body_lines.append(f"- [{title}]({url})")
+            safe_title_md = escape_markdown(title)
+            body_lines.append(f"- [{safe_title_md}]({url})")
 
         body = "\n".join(body_lines) + "\n"
 
