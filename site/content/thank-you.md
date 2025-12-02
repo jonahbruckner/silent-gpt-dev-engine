@@ -1,6 +1,5 @@
 +++
 title = ""
-date = false
 slug = "thank-you"
 +++
 
@@ -11,7 +10,7 @@ slug = "thank-you"
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 8vh;
+  padding-top: 12vh;
   padding-bottom: 2rem;
 }
 
