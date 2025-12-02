@@ -1,17 +1,16 @@
 +++
 title = ""
-date = false
 slug = "thank-you"
 +++
 
 {{< rawhtml >}}
 <style>
 .thankyou-outer {
-  min-height: 80vh;
+  min-height: 50vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 12vh;
+  padding-top: 2vh;
   padding-bottom: 2rem;
 }
 
