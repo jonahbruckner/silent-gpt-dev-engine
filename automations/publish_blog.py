@@ -2,7 +2,6 @@ import os
 import sys
 from datetime import datetime
 import subprocess
-from pathlib import Path
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
@@ -48,7 +47,6 @@ def run_git_commands(commit_message: str = "auto: new posts"):
     print(f"[publish_blog] Changed working directory to {repo_root}")
 
     # 1b) Sicherstellen, dass wir auf dem Branch 'main' sind
-    # -B: Branch 'main' erstellen oder auf aktuellen HEAD setzen
     subprocess.run(
         ["git", "checkout", "-B", "main"],
         check=True,
@@ -63,14 +61,8 @@ def run_git_commands(commit_message: str = "auto: new posts"):
 
     print(f"[publish_blog] Configuring git user: {author_name} <{author_email}>")
 
-    subprocess.run(
-        ["git", "config", "user.name", author_name],
-        check=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.email", author_email],
-        check=True,
-    )
+    subprocess.run(["git", "config", "user.name", author_name], check=True)
+    subprocess.run(["git", "config", "user.email", author_email], check=True)
 
     # 3) Prüfen, ob es überhaupt Änderungen gibt
     status = subprocess.run(
@@ -90,10 +82,7 @@ def run_git_commands(commit_message: str = "auto: new posts"):
 
     # 5) Commit
     print(f"[publish_blog] Committing with message: {commit_message!r}")
-    subprocess.run(
-        ["git", "commit", "-m", commit_message],
-        check=True,
-    )
+    subprocess.run(["git", "commit", "-m", commit_message], check=True)
 
     # 6) Remote konfigurieren
     remote_url = os.getenv("GIT_REMOTE_URL")
@@ -111,14 +100,45 @@ def run_git_commands(commit_message: str = "auto: new posts"):
     )
     subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
 
-    # 7) Push (Branchname ggf. anpassen, falls nicht main)
+    # 7) Push
     print("[publish_blog] Pushing to origin main...")
-    subprocess.run(
-        ["git", "push", "origin", "main"],
-        check=True,
-    )
+    subprocess.run(["git", "push", "origin", "main"], check=True)
 
     print("[publish_blog] Git push completed.")
+
+
+def build_description_from_body(body: str, max_len: int = 240) -> str:
+    """
+    Nimmt den Body (ohne H1) und baut eine kurze Description
+    aus dem ersten sinnvollen Absatz.
+    """
+    lines = [l.strip() for l in body.splitlines()]
+    # erste nicht-leere Zeile als Basis nehmen
+    first = next((l for l in lines if l), "")
+    if not first:
+        return ""
+
+    desc = first.replace("#", "").replace("*", "").strip()
+    if len(desc) > max_len:
+        desc = desc[: max_len - 3].rstrip() + "..."
+    return desc
+
+
+def strip_leading_h1(body: str) -> str:
+    """
+    Entfernt eine führende H1-Überschrift (# ...) aus dem Body,
+    damit der Titel nicht doppelt (Template + Body) erscheint.
+    """
+    lines = body.splitlines()
+    if not lines:
+        return body
+
+    first = lines[0].lstrip()
+    if first.startswith("#"):
+        # H1 entfernen, Rest zurückgeben
+        rest = "\n".join(lines[1:])
+        return rest.lstrip("\n")
+    return body
 
 
 def run():
@@ -145,22 +165,30 @@ def run():
 
             print(f"[publish_blog] Writing {path}")
 
-            # Hugo-Frontmatter bauen (TOML)
             title = item.title or f"Post {item.id}"
             safe_title = title.replace('"', '\\"')
-            front_matter = (
-                "+++\n"
-                f'title = "{safe_title}"\n'
-                f'date = "{created.isoformat()}"\n'
-                f'slug = "{slug}"\n'
-                "+++\n\n"
-            )
 
-            body = (item.body_md or "").strip()
+            # Body vorbereiten
+            raw_body = (item.body_md or "").strip()
+            body_no_h1 = strip_leading_h1(raw_body)
+            description = build_description_from_body(body_no_h1)
+
+            # Hugo-Frontmatter (TOML)
+            front_matter_lines = [
+                "+++",
+                f'title = "{safe_title}"',
+                f'date = "{created.isoformat()}"',
+                f'slug = "{slug}"',
+            ]
+            if description:
+                safe_desc = description.replace('"', '\\"')
+                front_matter_lines.append(f'description = "{safe_desc}"')
+            front_matter_lines.append("+++")
+            front_matter = "\n".join(front_matter_lines) + "\n\n"
 
             with open(path, "w", encoding="utf-8") as f:
                 f.write(front_matter)
-                f.write(body)
+                f.write(body_no_h1.strip())
                 f.write("\n")
 
             item.status = "published"
