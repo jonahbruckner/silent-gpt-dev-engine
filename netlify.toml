@@ -1,11 +1,11 @@
 [build]
   base = "site"
-  publish = "site/public"
-  command = "python ../automations/sync_packs.py && hugo"
+  publish = "public"
+  command = "pip install -r ../requirements.txt && python ../automations/sync_packs.py && hugo"
 
 [build.environment]
-  HUGO_VERSION = "0.134.0"       # oder eine aktuelle Version, muss nur >= extended sein
-  HUGO_ENV     = "production"
+  HUGO_VERSION = "0.134.0"
+  HUGO_ENV = "production"
 
 # Optional: redirects, falls später nötig
 [[redirects]]
