@@ -1,5 +1,6 @@
 +++
 title = ""
+date = false
 slug = "thank-you"
 +++
 
