@@ -7,11 +7,14 @@ from fastapi.responses import RedirectResponse, FileResponse
 
 router = APIRouter(tags=["payments"])
 
+# Stripe nur konfigurieren, wenn der Key gesetzt ist.
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-if not STRIPE_SECRET_KEY:
-    raise RuntimeError("STRIPE_SECRET_KEY not set in environment")
-
-stripe.api_key = STRIPE_SECRET_KEY
+if STRIPE_SECRET_KEY:
+    stripe.api_key = STRIPE_SECRET_KEY
+else:
+    # Kein harter Fehler beim Import – wichtig für Services,
+    # die Stripe gar nicht nutzen (z. B. silent-gpt-dev-engine).
+    stripe.api_key = None
 
 PUBLIC_SITE_URL = os.environ.get(
     "PUBLIC_SITE_URL",
@@ -29,6 +32,13 @@ DOWNLOADS_DIR = ROOT_DIR / "site" / "static" / "downloads"
 
 @router.get("/pay/{pack_slug}")
 async def create_checkout_and_redirect(pack_slug: str):
+    if not STRIPE_SECRET_KEY:
+        # Stripe ist auf diesem Service nicht konfiguriert.
+        raise HTTPException(
+            status_code=500,
+            detail="Payment service not configured (missing STRIPE_SECRET_KEY).",
+        )
+
     zip_path = DOWNLOADS_DIR / f"{pack_slug}.zip"
     if not zip_path.exists():
         raise HTTPException(status_code=404, detail="Pack not found")
@@ -61,6 +71,12 @@ async def create_checkout_and_redirect(pack_slug: str):
 
 @router.get("/download/{pack_slug}")
 async def download_pack(pack_slug: str, session_id: str = Query(...)):
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(
+            status_code=500,
+            detail="Payment service not configured (missing STRIPE_SECRET_KEY).",
+        )
+
     try:
         session = stripe.checkout.Session.retrieve(session_id)
     except Exception as e:
