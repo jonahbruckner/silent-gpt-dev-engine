@@ -34,7 +34,6 @@ def ensure_dir(path: str):
     if not os.path.isdir(path):
         os.makedirs(path, exist_ok=True)
 
-
 def run_git_commands(commit_message: str = "auto: new posts"):
     """
     Setzt git user.name / user.email, committet Änderungen (site/)
@@ -84,7 +83,18 @@ def run_git_commands(commit_message: str = "auto: new posts"):
         check=True,
     )
 
-    # 6) Push (Branchname ggf. anpassen, falls nicht main)
+    # 6) Remote konfigurieren
+    remote_url = os.getenv("GIT_REMOTE_URL")
+    if not remote_url:
+        print("[publish_blog] GIT_REMOTE_URL not set – skipping push.")
+        return
+
+    print(f"[publish_blog] Setting git remote 'origin' to {remote_url}")
+    # Falls schon existiert, ignorieren wir den Fehler
+    subprocess.run(["git", "remote", "remove", "origin"], check=False)
+    subprocess.run(["git", "remote", "add", "origin", remote_url], check=True)
+
+    # 7) Push (Branchname ggf. anpassen, falls nicht main)
     print("[publish_blog] Pushing to origin main...")
     subprocess.run(
         ["git", "push", "origin", "main"],
@@ -92,7 +102,6 @@ def run_git_commands(commit_message: str = "auto: new posts"):
     )
 
     print("[publish_blog] Git push completed.")
-
 
 def run():
     ensure_dir(POSTS_DIR)
