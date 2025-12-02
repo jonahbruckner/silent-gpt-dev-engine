@@ -1,3 +1,10 @@
++++
+title = "Why different files produce same gnss plots in my python code?"
+date = "2025-12-02T09:57:33Z"
+slug = "why-different-files-produce-same-gnss-plots-in-my-python-code"
++++
+
+
 # Why Different Files Produce Same GNSS Plots in My Python Code?
 
 When working with GNSS (Global Navigation Satellite System) data in Python, you may encounter a perplexing issue: different input files produce identical plots. This can be frustrating, especially when you expect each file to yield unique visualizations based on varying data. In this micro-tutorial, we’ll explore the reasons behind this phenomenon and provide a step-by-step solution to ensure your plots accurately reflect the data from each file.
