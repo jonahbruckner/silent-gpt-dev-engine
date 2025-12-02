@@ -1,7 +1,7 @@
 +++
 title = "Python Data Engineering Pack #1"
 slug = "python-data-pack-1"
-date = "2025-12-02T10:11:14.415452+00:00"
+date = "2025-12-02T10:52:38.974082+00:00"
 description = "A curated bundle of 27 SilentGPT micro-tutorials on python data."
 pack_slug = "python-data-pack-1"
 +++
