@@ -1,6 +1,6 @@
 +++
 title = ""
-date = ""
+date = false
 slug = "thank-you"
 +++
 
@@ -9,9 +9,10 @@ slug = "thank-you"
 .thankyou-outer {
   min-height: 80vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding-top: 8vh;
+  padding-bottom: 2rem;
 }
 
 .thankyou-wrapper {
