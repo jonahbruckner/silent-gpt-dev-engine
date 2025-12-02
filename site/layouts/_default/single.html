@@ -10,11 +10,9 @@
       {{ end }}
     </header>
 
-    {{/* ===== Product-CTA: erscheint, sobald pack_slug vorhanden ist ===== */}}
     {{ if .Params.pack_slug }}
       <section class="product-pay-cta">
-        {{/* BACKEND_BASE_URL aus Netlify-Env, Fallback auf Render-URL */}}
-        {{ $backend := getenv "BACKEND_BASE_URL" | default "https://silent-gpt-backend.onrender.com" }}
+        {{ $backend := .Site.Params.backendBaseURL | default "https://silent-gpt-backend.onrender.com" }}
 
         {{ with .Params.price_label }}
           <p class="product-price">{{ . }}</p>
