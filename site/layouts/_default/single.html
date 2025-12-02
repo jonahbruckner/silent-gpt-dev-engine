@@ -5,27 +5,42 @@
     <header class="single-header">
       <h1>{{ .Title }}</h1>
 
-      {{ with .Params.description }}
-        <p class="single-description">{{ . }}</p>
+      {{/* Nur für Nicht-Produkt-Seiten die description im Header anzeigen */}}
+      {{ if ne .Type "products" }}
+        {{ with .Params.description }}
+          <p class="single-description">{{ . }}</p>
+        {{ end }}
       {{ end }}
     </header>
 
-    {{ if .Params.pack_slug }}
-      <section class="product-pay-cta">
-        {{ $backend := .Site.Params.backendBaseURL | default "https://silent-gpt-backend.onrender.com" }}
+    {{/* ===== Produkt-Hero nur für type = "products" ===== */}}
+    {{ if eq .Type "products" }}
+      {{ $backend := .Site.Params.backendBaseURL | default "https://silent-gpt-backend.onrender.com" }}
 
-        {{ with .Params.price_label }}
-          <p class="product-price">{{ . }}</p>
+      <section class="product-hero">
+        {{ with .Params.description }}
+          <p class="product-tagline">{{ . }}</p>
         {{ end }}
 
-        <a class="product-pay-button"
-           href="{{ $backend }}/pay/{{ .Params.pack_slug }}">
-          Buy this pack
-        </a>
+        <div class="product-pay-cta">
+          {{ with .Params.price_label }}
+            <p class="product-price">{{ . }}</p>
+          {{ end }}
 
-        <p class="product-pay-hint">
-          Secure checkout via Stripe. Instant download after payment.
-        </p>
+          {{ if .Params.pack_slug }}
+            <a class="product-pay-button"
+               href="{{ $backend }}/pay/{{ .Params.pack_slug }}">
+              Buy this pack
+            </a>
+            <p class="product-pay-hint">
+              Secure checkout via Stripe. Instant download after payment.
+            </p>
+          {{ else }}
+            <p class="product-pay-hint">
+              This pack is not available for purchase yet.
+            </p>
+          {{ end }}
+        </div>
       </section>
     {{ end }}
 
