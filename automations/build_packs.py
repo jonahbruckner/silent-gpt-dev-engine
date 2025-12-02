@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 from typing import Dict, List
 import subprocess
 import json
+from pathlib import Path
+import zipfile
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
@@ -17,6 +19,7 @@ from app.db import init_db
 # Wohin geschrieben wird
 STATIC_PACKS_DIR = os.path.join(ROOT_DIR, "site", "static", "packs")
 PRODUCTS_DIR = os.path.join(ROOT_DIR, "site", "content", "products")
+STATIC_DOWNLOADS_DIR = os.path.join(ROOT_DIR, "site", "static", "downloads")  # NEU
 
 # Mindestanzahl Artikel pro Pack
 MIN_ITEMS_PER_PACK = 5
@@ -86,6 +89,51 @@ def fetch_published_items(limit: int = 200) -> List[ContentItem]:
         )
         return session.exec(q).all()
 
+def build_zip_packs():
+    """
+    Erzeugt für alle vorhandenen JSON-Packs ein ZIP in site/static/downloads.
+    Struktur:
+      downloads/<slug>.zip
+        <slug>.json
+        <slug>.md (falls vorhanden)
+    """
+    print("[build_packs] Building ZIP packs...")
+
+    ensure_dir(STATIC_DOWNLOADS_DIR)
+
+    if not os.path.isdir(STATIC_PACKS_DIR):
+        print(f"[build_packs] PACKS_DIR {STATIC_PACKS_DIR} existiert nicht – breche ZIP-Build ab.")
+        return
+
+    json_files = [f for f in os.listdir(STATIC_PACKS_DIR) if f.endswith(".json")]
+    if not json_files:
+        print(f"[build_packs] Keine JSON-Packs in {STATIC_PACKS_DIR} gefunden – nichts zu tun.")
+        return
+
+    for filename in json_files:
+        slug = filename[:-5]  # ".json" abschneiden
+        json_path = os.path.join(STATIC_PACKS_DIR, filename)
+        md_path = os.path.join(PRODUCTS_DIR, f"{slug}.md")
+        zip_path = os.path.join(STATIC_DOWNLOADS_DIR, f"{slug}.zip")
+
+        print(f"[build_packs] Erzeuge ZIP für Pack '{slug}' -> {zip_path}")
+
+        try:
+            with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+                # JSON ins ZIP
+                zf.write(json_path, arcname=f"{slug}.json")
+
+                # Markdown-Produktseite ins ZIP (falls vorhanden)
+                if os.path.isfile(md_path):
+                    zf.write(md_path, arcname=f"{slug}.md")
+                else:
+                    print(f"[build_packs] Warnung: Kein Markdown für {slug} gefunden ({md_path})")
+
+            size_kb = os.path.getsize(zip_path) / 1024
+            print(f"[build_packs] ZIP erstellt: {zip_path} ({size_kb:.1f} KB)")
+
+        except Exception as e:
+            print(f"[build_packs] Fehler beim Erzeugen von {zip_path}: {e}")
 
 def run_git_commands(commit_message: str = "auto: update packs"):
     """
@@ -110,9 +158,15 @@ def run_git_commands(commit_message: str = "auto: update packs"):
     subprocess.run(["git", "config", "user.email", author_email], check=True)
 
     # Nur Packs/Products adden
-    print("[build_packs] Adding packs/products to git...")
+    print("[build_packs] Adding packs/products/downloads to git...")
     subprocess.run(
-        ["git", "add", "site/static/packs", "site/content/products"],
+        [
+            "git",
+            "add",
+            "site/static/packs",
+            "site/content/products",
+            "site/static/downloads",
+        ],
         check=True,
     )
 
@@ -283,6 +337,9 @@ def build_packs():
     print(f"[build_packs] Done. Generated {generated_packs} packs.")
 
     if generated_packs > 0:
+        # NEU: ZIPs bauen, bevor wir committen
+        build_zip_packs()
+
         try:
             run_git_commands()
         except Exception as e:
