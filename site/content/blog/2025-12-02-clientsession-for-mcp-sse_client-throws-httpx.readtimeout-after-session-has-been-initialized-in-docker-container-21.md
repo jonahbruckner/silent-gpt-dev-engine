@@ -1,3 +1,9 @@
++++
+title = "Clientsession for mcp sse_client throws httpx.readtimeout after session has been initialized in docker container"
+date = "2025-12-02T09:57:33Z"
+slug = "clientsession-for-mcp-sse_client-throws-httpx.readtimeout-after-session-has-been-initialized-in-docker-container"
++++
+
 # Handling httpx.ReadTimeout in Docker with ClientSession for MCP SSE Client
 
 When working with the MCP SSE client in a Docker container, you may encounter an `httpx.ReadTimeout` error even after successfully initializing your `ClientSession`. This can be frustrating, especially when the code works perfectly outside of Docker. In this micro-tutorial, we will explore why this issue occurs and how to resolve it effectively.
