@@ -1,0 +1,86 @@
+{
+  "pack_slug": "fastapi-backend-pack-1",
+  "topic": "fastapi-backend",
+  "title": "FastAPI Backend Pack #1",
+  "description": "A curated bundle of 11 SilentGPT micro-tutorials on fastapi backend.",
+  "generated_at": "2025-12-02T10:11:14.415452+00:00",
+  "items": [
+    {
+      "id": 29,
+      "title": "Similar approach for allowed_host ip whitelist filtering in django, but in fastapi",
+      "slug": "similar-approach-for-allowed_host-ip-whitelist-filtering-in-django-but-in-fastapi",
+      "created_at": "2025-12-02T09:22:38.006590",
+      "url": "/blog/similar-approach-for-allowed_host-ip-whitelist-filtering-in-django-but-in-fastapi/"
+    },
+    {
+      "id": 28,
+      "title": "OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing",
+      "slug": "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing",
+      "created_at": "2025-12-02T09:22:17.845519",
+      "url": "/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/"
+    },
+    {
+      "id": 27,
+      "title": "Can a React (Vite) SPA prevent a component from being included in the client bundle until after backend authentication?",
+      "slug": "can-a-react-(vite)-spa-prevent-a-component-from-being-included-in-the-client-bundle-until-after-backend-authentication",
+      "created_at": "2025-12-02T09:21:58.016569",
+      "url": "/blog/can-a-react-(vite)-spa-prevent-a-component-from-being-included-in-the-client-bundle-until-after-backend-authentication/"
+    },
+    {
+      "id": 26,
+      "title": "FastAPI WebSocket + Kafka: Only the last connected client receives messages",
+      "slug": "fastapi-websocket-+-kafka-only-the-last-connected-client-receives-messages",
+      "created_at": "2025-12-02T09:21:37.805360",
+      "url": "/blog/fastapi-websocket-+-kafka-only-the-last-connected-client-receives-messages/"
+    },
+    {
+      "id": 25,
+      "title": "FastAPI Performance Enhancement with Snowflake",
+      "slug": "fastapi-performance-enhancement-with-snowflake",
+      "created_at": "2025-12-02T08:56:44.772115",
+      "url": "/blog/fastapi-performance-enhancement-with-snowflake/"
+    },
+    {
+      "id": 24,
+      "title": "Speed up LangGraph REACT + RAG.(Multi-Agent Chatbot)",
+      "slug": "speed-up-langgraph-react-+-rag.(multi-agent-chatbot)",
+      "created_at": "2025-12-02T08:56:23.137549",
+      "url": "/blog/speed-up-langgraph-react-+-rag.(multi-agent-chatbot)/"
+    },
+    {
+      "id": 23,
+      "title": "FastAPI text-classification API returns 42 while deploying",
+      "slug": "fastapi-text-classification-api-returns-42-while-deploying",
+      "created_at": "2025-12-02T08:55:57.793251",
+      "url": "/blog/fastapi-text-classification-api-returns-42-while-deploying/"
+    },
+    {
+      "id": 22,
+      "title": "DuckDB connection.execute from fast api code changes &amp;( to amp;( in a read_xlsx query",
+      "slug": "duckdb-connection.execute-from-fast-api-code-changes-&amp;(-to-amp;(-in-a-read_xlsx-query",
+      "created_at": "2025-12-02T08:55:34.815027",
+      "url": "/blog/duckdb-connection.execute-from-fast-api-code-changes-&amp;(-to-amp;(-in-a-read_xlsx-query/"
+    },
+    {
+      "id": 16,
+      "title": "I need to validate a word is infact an english word",
+      "slug": "i-need-to-validate-a-word-is-infact-an-english-word",
+      "created_at": "2025-12-02T08:22:37.962898",
+      "url": "/blog/i-need-to-validate-a-word-is-infact-an-english-word/"
+    },
+    {
+      "id": 10,
+      "title": "Instagram Comment Scraping using Selenium - Selenium not loading more than 15 Instagram comments",
+      "slug": "instagram-comment-scraping-using-selenium---selenium-not-loading-more-than-15-instagram-comments",
+      "created_at": "2025-12-02T04:03:11.258058",
+      "url": "/blog/instagram-comment-scraping-using-selenium---selenium-not-loading-more-than-15-instagram-comments/"
+    },
+    {
+      "id": 7,
+      "title": "How to navigate to domain (not url) in Python Playwright?",
+      "slug": "how-to-navigate-to-domain-(not-url)-in-python-playwright",
+      "created_at": "2025-12-02T04:02:17.067583",
+      "url": "/blog/how-to-navigate-to-domain-(not-url)-in-python-playwright/"
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+{
+  "pack_slug": "python-data-pack-1",
+  "topic": "python-data",
+  "title": "Python Data Engineering Pack #1",
+  "description": "A curated bundle of 27 SilentGPT micro-tutorials on python data.",
+  "generated_at": "2025-12-02T10:11:14.415452+00:00",
+  "items": [
+    {
+      "id": 29,
+      "title": "Similar approach for allowed_host ip whitelist filtering in django, but in fastapi",
+      "slug": "similar-approach-for-allowed_host-ip-whitelist-filtering-in-django-but-in-fastapi",
+      "created_at": "2025-12-02T09:22:38.006590",
+      "url": "/blog/similar-approach-for-allowed_host-ip-whitelist-filtering-in-django-but-in-fastapi/"
+    },
+    {
+      "id": 28,
+      "title": "OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing",
+      "slug": "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing",
+      "created_at": "2025-12-02T09:22:17.845519",
+      "url": "/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/"
+    },
+    {
+      "id": 26,
+      "title": "FastAPI WebSocket + Kafka: Only the last connected client receives messages",
+      "slug": "fastapi-websocket-+-kafka-only-the-last-connected-client-receives-messages",
+      "created_at": "2025-12-02T09:21:37.805360",
+      "url": "/blog/fastapi-websocket-+-kafka-only-the-last-connected-client-receives-messages/"
+    },
+    {
+      "id": 25,
+      "title": "FastAPI Performance Enhancement with Snowflake",
+      "slug": "fastapi-performance-enhancement-with-snowflake",
+      "created_at": "2025-12-02T08:56:44.772115",
+      "url": "/blog/fastapi-performance-enhancement-with-snowflake/"
+    },
+    {
+      "id": 23,
+      "title": "FastAPI text-classification API returns 42 while deploying",
+      "slug": "fastapi-text-classification-api-returns-42-while-deploying",
+      "created_at": "2025-12-02T08:55:57.793251",
+      "url": "/blog/fastapi-text-classification-api-returns-42-while-deploying/"
+    },
+    {
+      "id": 22,
+      "title": "DuckDB connection.execute from fast api code changes &amp;( to amp;( in a read_xlsx query",
+      "slug": "duckdb-connection.execute-from-fast-api-code-changes-&amp;(-to-amp;(-in-a-read_xlsx-query",
+      "created_at": "2025-12-02T08:55:34.815027",
+      "url": "/blog/duckdb-connection.execute-from-fast-api-code-changes-&amp;(-to-amp;(-in-a-read_xlsx-query/"
+    },
+    {
+      "id": 21,
+      "title": "ClientSession for mcp sse_client throws httpx.ReadTimeout after session has been initialized in docker container",
+      "slug": "clientsession-for-mcp-sse_client-throws-httpx.readtimeout-after-session-has-been-initialized-in-docker-container",
+      "created_at": "2025-12-02T08:55:13.855667",
+      "url": "/blog/clientsession-for-mcp-sse_client-throws-httpx.readtimeout-after-session-has-been-initialized-in-docker-container/"
+    },
+    {
+      "id": 20,
+      "title": "How to install locally built package with uv",
+      "slug": "how-to-install-locally-built-package-with-uv",
+      "created_at": "2025-12-02T08:24:03.728077",
+      "url": "/blog/how-to-install-locally-built-package-with-uv/"
+    },
+    {
+      "id": 19,
+      "title": "Why different files produce same GNSS plots in my Python code?",
+      "slug": "why-different-files-produce-same-gnss-plots-in-my-python-code",
+      "created_at": "2025-12-02T08:23:46.295123",
+      "url": "/blog/why-different-files-produce-same-gnss-plots-in-my-python-code/"
+    },
+    {
+      "id": 18,
+      "title": "Why LoRA Shows 1.4B Trainable Params Instead of 38M When Fine-Tuning Gemma 3 4B?",
+      "slug": "why-lora-shows-1.4b-trainable-params-instead-of-38m-when-fine-tuning-gemma-3-4b",
+      "created_at": "2025-12-02T08:23:24.160958",
+      "url": "/blog/why-lora-shows-1.4b-trainable-params-instead-of-38m-when-fine-tuning-gemma-3-4b/"
+    },
+    {
+      "id": 17,
+      "title": "Polars lazyframe update() silently failing in a serverless Cloud Function (OOM error)",
+      "slug": "polars-lazyframe-update()-silently-failing-in-a-serverless-cloud-function-(oom-error)",
+      "created_at": "2025-12-02T08:22:57.923308",
+      "url": "/blog/polars-lazyframe-update()-silently-failing-in-a-serverless-cloud-function-(oom-error)/"
+    },
+    {
+      "id": 16,
+      "title": "I need to validate a word is infact an english word",
+      "slug": "i-need-to-validate-a-word-is-infact-an-english-word",
+      "created_at": "2025-12-02T08:22:37.962898",
+      "url": "/blog/i-need-to-validate-a-word-is-infact-an-english-word/"
+    },
+    {
+      "id": 15,
+      "title": "How to Fix my Code to Simulate a Realistic Three Body Problem? My code plots straight lines that&#39;s Incorrect I want to keep correct physics and values",
+      "slug": "how-to-fix-my-code-to-simulate-a-realistic-three-body-problem-my-code-plots-straight-lines-that&39;s-incorrect-i-want-to-keep-correct-physics-and-values",
+      "created_at": "2025-12-02T08:05:25.211146",
+      "url": "/blog/how-to-fix-my-code-to-simulate-a-realistic-three-body-problem-my-code-plots-straight-lines-that&39;s-incorrect-i-want-to-keep-correct-physics-and-values/"
+    },
+    {
+      "id": 14,
+      "title": "What is the Pythonic way to handle invalid user input in a while loop?",
+      "slug": "what-is-the-pythonic-way-to-handle-invalid-user-input-in-a-while-loop",
+      "created_at": "2025-12-02T08:04:56.564533",
+      "url": "/blog/what-is-the-pythonic-way-to-handle-invalid-user-input-in-a-while-loop/"
+    },
+    {
+      "id": 13,
+      "title": "Can&#39;t show Cv2 frame in pyqt6 QLabel pixmap",
+      "slug": "can&39;t-show-cv2-frame-in-pyqt6-qlabel-pixmap",
+      "created_at": "2025-12-02T08:04:37.430932",
+      "url": "/blog/can&39;t-show-cv2-frame-in-pyqt6-qlabel-pixmap/"
+    },
+    {
+      "id": 12,
+      "title": "problem with numba calling with dtype fit",
+      "slug": "problem-with-numba-calling-with-dtype-fit",
+      "created_at": "2025-12-02T08:04:10.667814",
+      "url": "/blog/problem-with-numba-calling-with-dtype-fit/"
+    },
+    {
+      "id": 11,
+      "title": "How do I efficiently check if any value in a list of dictionaries matches a given key-value pair in Python?",
+      "slug": "how-do-i-efficiently-check-if-any-value-in-a-list-of-dictionaries-matches-a-given-key-value-pair-in-python",
+      "created_at": "2025-12-02T08:03:46.082269",
+      "url": "/blog/how-do-i-efficiently-check-if-any-value-in-a-list-of-dictionaries-matches-a-given-key-value-pair-in-python/"
+    },
+    {
+      "id": 10,
+      "title": "Instagram Comment Scraping using Selenium - Selenium not loading more than 15 Instagram comments",
+      "slug": "instagram-comment-scraping-using-selenium---selenium-not-loading-more-than-15-instagram-comments",
+      "created_at": "2025-12-02T04:03:11.258058",
+      "url": "/blog/instagram-comment-scraping-using-selenium---selenium-not-loading-more-than-15-instagram-comments/"
+    },
+    {
+      "id": 9,
+      "title": "Numpy importing error in mod_wsgi app on Fedora 43",
+      "slug": "numpy-importing-error-in-mod_wsgi-app-on-fedora-43",
+      "created_at": "2025-12-02T04:02:51.938752",
+      "url": "/blog/numpy-importing-error-in-mod_wsgi-app-on-fedora-43/"
+    },
+    {
+      "id": 8,
+      "title": "Can we edit .py files in VSCode and use Google Colab extension to run them on Google servers like Jupyter Notebooks?",
+      "slug": "can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks",
+      "created_at": "2025-12-02T04:02:33.176912",
+      "url": "/blog/can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks/"
+    },
+    {
+      "id": 7,
+      "title": "How to navigate to domain (not url) in Python Playwright?",
+      "slug": "how-to-navigate-to-domain-(not-url)-in-python-playwright",
+      "created_at": "2025-12-02T04:02:17.067583",
+      "url": "/blog/how-to-navigate-to-domain-(not-url)-in-python-playwright/"
+    },
+    {
+      "id": 6,
+      "title": "Convert this date/time format into pandas datetime",
+      "slug": "convert-this-date-time-format-into-pandas-datetime",
+      "created_at": "2025-12-02T04:02:03.107355",
+      "url": "/blog/convert-this-date-time-format-into-pandas-datetime/"
+    },
+    {
+      "id": 5,
+      "title": "How to edit/replace text in a PDF without changing formatting",
+      "slug": "how-to-edit-replace-text-in-a-pdf-without-changing-formatting",
+      "created_at": "2025-12-02T00:03:56.753316",
+      "url": "/blog/how-to-edit-replace-text-in-a-pdf-without-changing-formatting/"
+    },
+    {
+      "id": 4,
+      "title": "Implement STL flexi toy maker / add hinges to STL files programmatically",
+      "slug": "implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically",
+      "created_at": "2025-12-02T00:03:34.756277",
+      "url": "/blog/implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically/"
+    },
+    {
+      "id": 3,
+      "title": "Creating a full screen compatible overlay for MacOS",
+      "slug": "creating-a-full-screen-compatible-overlay-for-macos",
+      "created_at": "2025-12-02T00:03:03.468344",
+      "url": "/blog/creating-a-full-screen-compatible-overlay-for-macos/"
+    },
+    {
+      "id": 2,
+      "title": "Python: Implement a Sentinel Flag without an Arbitrary Value",
+      "slug": "python-implement-a-sentinel-flag-without-an-arbitrary-value",
+      "created_at": "2025-12-02T00:02:45.636408",
+      "url": "/blog/python-implement-a-sentinel-flag-without-an-arbitrary-value/"
+    },
+    {
+      "id": 1,
+      "title": "How to solve this question on AND operation?",
+      "slug": "how-to-solve-this-question-on-and-operation",
+      "created_at": "2025-12-02T00:02:28.435404",
+      "url": "/blog/how-to-solve-this-question-on-and-operation/"
+    }
+  ]
+}

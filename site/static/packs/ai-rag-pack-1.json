@@ -1,0 +1,58 @@
+{
+  "pack_slug": "ai-rag-pack-1",
+  "topic": "ai-rag",
+  "title": "AI & RAG Troubleshooting Pack #1",
+  "description": "A curated bundle of 7 SilentGPT micro-tutorials on ai rag.",
+  "generated_at": "2025-12-02T10:11:14.415452+00:00",
+  "items": [
+    {
+      "id": 28,
+      "title": "OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing",
+      "slug": "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing",
+      "created_at": "2025-12-02T09:22:17.845519",
+      "url": "/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/"
+    },
+    {
+      "id": 25,
+      "title": "FastAPI Performance Enhancement with Snowflake",
+      "slug": "fastapi-performance-enhancement-with-snowflake",
+      "created_at": "2025-12-02T08:56:44.772115",
+      "url": "/blog/fastapi-performance-enhancement-with-snowflake/"
+    },
+    {
+      "id": 24,
+      "title": "Speed up LangGraph REACT + RAG.(Multi-Agent Chatbot)",
+      "slug": "speed-up-langgraph-react-+-rag.(multi-agent-chatbot)",
+      "created_at": "2025-12-02T08:56:23.137549",
+      "url": "/blog/speed-up-langgraph-react-+-rag.(multi-agent-chatbot)/"
+    },
+    {
+      "id": 8,
+      "title": "Can we edit .py files in VSCode and use Google Colab extension to run them on Google servers like Jupyter Notebooks?",
+      "slug": "can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks",
+      "created_at": "2025-12-02T04:02:33.176912",
+      "url": "/blog/can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks/"
+    },
+    {
+      "id": 6,
+      "title": "Convert this date/time format into pandas datetime",
+      "slug": "convert-this-date-time-format-into-pandas-datetime",
+      "created_at": "2025-12-02T04:02:03.107355",
+      "url": "/blog/convert-this-date-time-format-into-pandas-datetime/"
+    },
+    {
+      "id": 5,
+      "title": "How to edit/replace text in a PDF without changing formatting",
+      "slug": "how-to-edit-replace-text-in-a-pdf-without-changing-formatting",
+      "created_at": "2025-12-02T00:03:56.753316",
+      "url": "/blog/how-to-edit-replace-text-in-a-pdf-without-changing-formatting/"
+    },
+    {
+      "id": 4,
+      "title": "Implement STL flexi toy maker / add hinges to STL files programmatically",
+      "slug": "implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically",
+      "created_at": "2025-12-02T00:03:34.756277",
+      "url": "/blog/implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically/"
+    }
+  ]
+}
