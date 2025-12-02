@@ -1,7 +1,7 @@
 +++
 title = "AI & RAG Troubleshooting Pack #1"
 slug = "ai-rag-pack-1"
-date = "2025-12-02T11:16:46.815814+00:00"
+date = "2025-12-02T11:26:43.645301+00:00"
 description = "A curated bundle of 7 SilentGPT micro-tutorials on ai rag."
 pack_slug = "ai-rag-pack-1"
 +++
