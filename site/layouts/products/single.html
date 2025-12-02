@@ -1,0 +1,41 @@
+{{ define "main" }}
+<article class="single-article">
+  <div class="container">
+    <header class="single-header">
+      <h1>{{ .Title }}</h1>
+
+      {{ with .Params.description }}
+        <p class="single-description">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    {{/* Checkout-CTA Block */}}
+    <section class="product-pay-cta">
+      {{/* BACKEND_BASE_URL aus Netlify-Env, Fallback auf Render-URL */}}
+      {{ $backend := getenv "BACKEND_BASE_URL" | default "https://silent-gpt-backend.onrender.com" }}
+
+      {{ with .Params.price_label }}
+        <p class="product-price">{{ . }}</p>
+      {{ end }}
+
+      {{ if .Params.pack_slug }}
+        <a class="product-pay-button"
+           href="{{ $backend }}/pay/{{ .Params.pack_slug }}">
+          Buy this pack
+        </a>
+        <p class="product-pay-hint">
+          Secure checkout via Stripe. Instant download after payment.
+        </p>
+      {{ else }}
+        <p class="product-pay-hint">
+          This pack is not available for purchase yet.
+        </p>
+      {{ end }}
+    </section>
+
+    <div class="single-content">
+      {{ .Content }}
+    </div>
+  </div>
+</article>
+{{ end }}
