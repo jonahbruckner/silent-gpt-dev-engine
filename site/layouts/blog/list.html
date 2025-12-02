@@ -5,10 +5,10 @@
 
     {{ range .Paginator.Pages }}
       <article class="post-list-item">
-        <h2>
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <h2 class="post-title">
+          {{ .Title }}
         </h2>
-
+        
         <p class="post-meta">
           {{ .Date.Format "02 Jan 2006" }}
         </p>
@@ -26,7 +26,7 @@
         {{ end }}
 
         <a class="post-readmore" href="{{ .RelPermalink }}">
-          Read article →
+          Read Article →
         </a>
       </article>
     {{ end }}
