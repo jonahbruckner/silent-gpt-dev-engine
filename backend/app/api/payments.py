@@ -26,7 +26,7 @@ BACKEND_BASE_URL = os.environ.get(
 )
 PACK_PRICE_EUR_CENTS = int(os.environ.get("PACK_PRICE_EUR_CENTS", "899"))
 
-ROOT_DIR = Path(__file__).resolve().parents[2]
+ROOT_DIR = Path(__file__).resolve().parents[3]
 DOWNLOADS_DIR = ROOT_DIR / "site" / "static" / "downloads"
 
 
