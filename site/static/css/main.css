@@ -163,6 +163,17 @@ a:hover {
   margin-bottom: 2rem;
 }
 
+.post-excerpt {
+  margin-top: 0.3rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 60rem;
+}
+
+.blog-content {
+  margin-top: 1.5rem;
+}
+
 /* Single */
 
 .single-article {
