@@ -1,24 +1,20 @@
 +++
 title = "AI & RAG Troubleshooting Pack #1"
 slug = "ai-rag-pack-1"
-date = "2025-12-02T12:00:23.001376+00:00"
-# 1 Satz – kurze Tagline unter dem Titel
-description = "A curated bundle of 7 SilentGPT micro-tutorials on AI & RAG pipelines."
-# 2–3 Sätze – größere Beschreibung im Hero
-hero_body = """
-Perfect if you're building retrieval-augmented generation systems and need patterns that actually work in production. 
-You’ll get focused micro-tutorials on debugging, monitoring and improving RAG performance, not generic theory. 
-Use this pack as a toolbox you can quickly dip into when something in your pipeline breaks or slows down.
-"""
-
+date = "2025-12-02T23:57:41.976316+00:00"
+description = "A curated bundle of SilentGPT micro-tutorials for debugging and improving your retrieval-augmented generation systems."
 pack_slug = "ai-rag-pack-1"
+topic = "ai-rag"
 price_label = "8,99 €"
 type = "products"
 +++
+# AI & RAG Troubleshooting Pack #1
+
+This pack gives you a focused collection of real-world RAG issues and their fixes. Du lernst, wie du Embeddings, Vektorsuche, Kontextfenster und Prompting aufeinander abstimmst, um stabile Antworten zu bekommen – statt zufälliger Halluzinationen. Ideal, wenn du an produktionsnahen RAG-Pipelines arbeitest und weniger Zeit mit Trial-and-Error verschwenden willst.
 
 ## Included articles
 
-- <a href="/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/">OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing</a>
+- <a href="/blog/openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing/">OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing</a>
 - <a href="/blog/fastapi-performance-enhancement-with-snowflake/">FastAPI Performance Enhancement with Snowflake</a>
 - <a href="/blog/speed-up-langgraph-react-+-rag.(multi-agent-chatbot)/">Speed up LangGraph REACT + RAG.(Multi-Agent Chatbot)</a>
 - <a href="/blog/can-we-edit-.py-files-in-vscode-and-use-google-colab-extension-to-run-them-on-google-servers-like-jupyter-notebooks/">Can we edit .py files in VSCode and use Google Colab extension to run them on Google servers like Jupyter Notebooks?</a>

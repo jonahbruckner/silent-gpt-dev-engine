@@ -2,8 +2,10 @@
   "pack_slug": "python-data-pack-1",
   "topic": "python-data",
   "title": "Python Data Engineering Pack #1",
-  "description": "A curated bundle of 27 SilentGPT micro-tutorials on python data.",
-  "generated_at": "2025-12-02T12:00:23.001376+00:00",
+  "description": "SilentGPT micro-tutorials for cleaning, transforming and automating data workflows in Python.",
+  "long_description": "Dieses Pack fokussiert sich auf typische Data-Engineering-Alltagsaufgaben mit Python: Daten einlesen, bereinigen, transformieren, validieren und automatisiert weiterverarbeiten. Die Beispiele sind praxisnah gehalten und orientieren sich an wiederkehrenden Problemen, die in BI-, Analytics- und Engineering-Teams ständig auftauchen. Ideal, wenn du deine Daten-Pipelines robuster und automatisierter machen willst.",
+  "price_label": "8,99 €",
+  "generated_at": "2025-12-02T23:57:41.976316+00:00",
   "items": [
     {
       "id": 29,
@@ -15,9 +17,9 @@
     {
       "id": 28,
       "title": "OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing",
-      "slug": "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing",
+      "slug": "openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing",
       "created_at": "2025-12-02T09:22:17.845519",
-      "url": "/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/"
+      "url": "/blog/openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing/"
     },
     {
       "id": 26,

@@ -2,8 +2,10 @@
   "pack_slug": "fastapi-backend-pack-1",
   "topic": "fastapi-backend",
   "title": "FastAPI Backend Pack #1",
-  "description": "A curated bundle of 11 SilentGPT micro-tutorials on fastapi backend.",
-  "generated_at": "2025-12-02T12:00:23.001376+00:00",
+  "description": "Patterns and recipes for shipping production-ready FastAPI services faster.",
+  "long_description": "Dieses Pack bündelt Best Practices für FastAPI-Backends, von Routing und Settings über Background-Jobs bis hin zur Integration mit Datenbanken und externen Services. Du bekommst konkrete Snippets und Lösungswege, die in echten Projekten funktionieren, statt generischer Hello-World-Beispiele. Perfekt, wenn du dein nächstes Backend stabil und wartbar aufsetzen willst.",
+  "price_label": "8,99 €",
+  "generated_at": "2025-12-02T23:57:41.976316+00:00",
   "items": [
     {
       "id": 29,
@@ -15,9 +17,9 @@
     {
       "id": 28,
       "title": "OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing",
-      "slug": "openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing",
+      "slug": "openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing",
       "created_at": "2025-12-02T09:22:17.845519",
-      "url": "/blog/openai-api-key-being-leaked-even-though-it’s-stored-securely-on-server-.-need-help-diagnosing/"
+      "url": "/blog/openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing/"
     },
     {
       "id": 27,
