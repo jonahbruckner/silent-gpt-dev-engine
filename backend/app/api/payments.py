@@ -68,7 +68,6 @@ async def create_checkout_and_redirect(pack_slug: str):
 
     return RedirectResponse(session.url, status_code=303)
 
-
 @router.get("/download/{pack_slug}")
 async def download_pack(pack_slug: str, session_id: str = Query(...)):
     if not STRIPE_SECRET_KEY:
@@ -77,10 +76,14 @@ async def download_pack(pack_slug: str, session_id: str = Query(...)):
             detail="Payment service not configured (missing STRIPE_SECRET_KEY).",
         )
 
+    # Falls Stripe {CHECKOUT_SESSION_ID} → {cs_...} einsetzt, Klammern entfernen
+    clean_session_id = session_id.strip("{}")
+
     try:
-        session = stripe.checkout.Session.retrieve(session_id)
+        session = stripe.checkout.Session.retrieve(clean_session_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Invalid session: {e}")
+
 
     if session.payment_status != "paid":
         raise HTTPException(status_code=402, detail="Payment not completed")
