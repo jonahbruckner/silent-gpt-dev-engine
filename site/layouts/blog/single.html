@@ -1,0 +1,27 @@
+{{ define "main" }}
+<article class="single-article">
+  <div class="container">
+    <header class="single-header">
+      <h1>{{ .Title }}</h1>
+
+      <p class="post-meta">
+        {{ .Date.Format "02 Jan 2006" }}
+      </p>
+
+      {{ with .Params.description }}
+        <p class="single-description">{{ . }}</p>
+      {{ end }}
+    </header>
+
+    <div class="single-content blog-content">
+      {{/* 
+         .Content ist bereits HTML. 
+         Wir schneiden das erste <h1>…</h1> weg, damit der
+         doppelte Titel verschwindet.
+      */}}
+      {{ $clean := .Content | replaceRE `(?s)^[\n\r\t ]*<h1[^>]*>.*?</h1>` "" }}
+      {{ $clean | safeHTML }}
+    </div>
+  </div>
+</article>
+{{ end }}
