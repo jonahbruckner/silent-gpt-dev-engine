@@ -13,7 +13,7 @@ from app.db import get_session
 from app.models.content import ContentItem
 from app.db import init_db
 
-POSTS_DIR = os.path.join(ROOT_DIR, "site", "posts")
+POSTS_DIR = os.path.join(ROOT_DIR, "site", "content", "blog")
 MAX_POSTS_PER_RUN = 3  # balanced: up to 3/day
 
 init_db()
