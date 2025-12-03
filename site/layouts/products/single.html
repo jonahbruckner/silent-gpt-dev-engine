@@ -1,37 +1,81 @@
 {{ define "main" }}
 
-<div class="product-page">
+<style>
+.product-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: center;
+}
 
-  <h1>{{ .Title }}</h1>
+.product-hero-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.product-description {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 650px;
+  margin: 0.5rem auto 2rem;
+}
+
+.buy-button {
+  display: inline-block;
+  margin-top: 1.2rem;
+  padding: 0.9rem 2.2rem;
+  background: linear-gradient(135deg, var(--accent), #22c55e);
+  color: white;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.buy-button:hover {
+  filter: brightness(1.08);
+}
+
+.section-title {
+  margin-top: 3rem;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.article-list {
+  margin-top: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.article-list li {
+  margin: 0.4rem 0;
+  font-size: 1.05rem;
+}
+</style>
+
+<div class="product-container">
+
+  <h1 class="product-hero-title">{{ .Title }}</h1>
 
   <p class="product-description">
     {{ .Params.description }}
   </p>
 
-  <!-- Buy Button -->
-  <div class="buy-box" style="margin-top: 20px; margin-bottom: 30px;">
-    <a
-      href="{{ .Site.Params.backendBaseURL }}/pay/{{ .Params.pack_slug }}"
-      class="btn-primary"
-      style="
-        display: inline-block;
-        padding: 12px 22px;
-        background: #007bff;
-        color: white;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 600;
-      "
-    >
-      Kaufen – {{ .Params.price_label }}
-    </a>
-  </div>
+  <!-- BUY BUTTON -->
+  <a
+    class="buy-button"
+    href="{{ .Site.Params.backendBaseURL }}/pay/{{ .Params.pack_slug }}"
+  >
+    Kaufen – {{ .Params.price_label }}
+  </a>
 
-  <hr>
+  <!-- CONTENT SECTION -->
+  <h2 class="section-title">Was ist im Pack enthalten?</h2>
 
-  <h2>Was ist im Pack enthalten?</h2>
-
-  <div class="pack-long-description" style="margin-bottom: 20px;">
+  <div class="product-description" style="margin-bottom: 1.5rem;">
     {{ .Content }}
   </div>
 
