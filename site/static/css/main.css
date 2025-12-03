@@ -436,3 +436,263 @@ a:hover {
   font-size: 0.98rem;
   line-height: 1.6;
 }
+
+/* ========================= */
+/* Header: Nav Hover Effekt */
+/* ========================= */
+
+.header-nav a,
+.header-nav-link {
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: color 0.18s ease-out;
+}
+
+.header-nav a::after,
+.header-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.35rem;
+  width: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), #22c55e);
+  transition: width 0.2s ease-out;
+}
+
+.header-nav a:hover,
+.header-nav-link:hover {
+  color: #ffffff;
+}
+
+.header-nav a:hover::after,
+.header-nav-link:hover::after {
+  width: 100%;
+}
+
+/* ========================= */
+/* Header: Logo Glow         */
+/* ========================= */
+
+.header-logo-mark {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #4f46e5, #22c55e);
+  box-shadow:
+    0 0 0 0 rgba(79, 70, 229, 0.45),
+    0 16px 40px rgba(15, 23, 42, 0.9);
+  overflow: hidden;
+  animation: logoPulse 3.2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(79, 70, 229, 0.45),
+      0 16px 40px rgba(15, 23, 42, 0.9);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow:
+      0 0 26px 7px rgba(79, 70, 229, 0.75),
+      0 20px 52px rgba(15, 23, 42, 1);
+    transform: translateY(-1px);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(79, 70, 229, 0.45),
+      0 16px 40px rgba(15, 23, 42, 0.9);
+    transform: translateY(0);
+  }
+}
+
+/* Optional: Logo beim Hover leicht anheben */
+
+.header-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.18s ease-out;
+}
+
+.header-logo:hover {
+  transform: translateY(-1px);
+}
+
+/* ========================= */
+/* Blog: Karten              */
+/* ========================= */
+
+.post-grid {
+  display: grid;
+  gap: 1.6rem;
+}
+
+.post-card {
+  position: relative;
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(31, 41, 55, 0.95);
+  padding: 1.5rem 1.7rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    border-color 0.18s ease-out,
+    background 0.18s ease-out;
+}
+
+.post-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background:
+    radial-gradient(circle at top left,
+      rgba(79, 70, 229, 0.55),
+      rgba(34, 197, 94, 0.15)
+    )
+    border-box;
+  mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease-out;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+  border-color: rgba(79, 70, 229, 0.8);
+}
+
+.post-card:hover::before {
+  opacity: 1;
+}
+
+.post-card h3 {
+  margin-bottom: 0.25rem;
+}
+
+.post-card p {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.post-readmore {
+  display: inline-flex;
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* ========================= */
+/* Products: Layout & Style  */
+/* ========================= */
+
+.product-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2.7rem 1.6rem 3.5rem;
+}
+
+.product-hero-title {
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 0.7rem;
+}
+
+.product-description,
+.product-hero-text {
+  max-width: 720px;
+  margin: 0.25rem auto 0;
+  color: var(--muted);
+  font-size: 0.98rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* Abschnitt "Was ist im Pack enthalten?" */
+
+.section-title,
+.product-container h2.section-title {
+  text-align: center;
+  margin: 3rem 0 1.3rem;
+  font-size: 1.55rem;
+}
+
+/* Liste der Included Articles: zentriert, aber linksbündige Items */
+
+.product-container ul {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-left: 1.5rem;
+  list-style: disc;
+  list-style-position: outside;
+}
+
+.product-container ul li {
+  margin-bottom: 0.25rem;
+  line-height: 1.45;
+}
+
+/* CTA-Karte beim Produkt (Kaufbox) */
+
+.product-pay-cta {
+  margin: 2.5rem auto 0;
+  max-width: 520px;
+  padding: 1.7rem 1.9rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: radial-gradient(circle at top, #020617 0, #000 100%);
+  text-align: center;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.18s ease-out,
+    box-shadow 0.18s ease-out,
+    border-color 0.18s ease-out;
+}
+
+.product-pay-cta:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+}
+
+.product-price {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.product-pay-button {
+  display: inline-block;
+  padding: 0.75rem 1.9rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), #22c55e);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.7);
+}
+
+.product-pay-button:hover {
+  filter: brightness(1.05);
+  text-decoration: none;
+}
+
+.product-pay-hint {
+  margin-top: 0.7rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
