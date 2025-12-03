@@ -19,7 +19,7 @@ if [ -f "automations/generate_content.py" ]; then
   python automations/generate_content.py || echo "[daily_cycle] generate_content.py failed (continuing)."
 fi
 
-# 3) Neue Posts direkt über AI generieren (Phase 3.1)
+# 3) Neue Posts direkt über AI generieren
 if [ -f "automations/auto_generate_blogposts.py" ]; then
   echo "[daily_cycle] auto_generate_blogposts.py..."
   python automations/auto_generate_blogposts.py || echo "[daily_cycle] auto_generate_blogposts.py failed (continuing)."
@@ -36,11 +36,20 @@ echo "[daily_cycle] build_packs.py..."
 python automations/build_packs.py || echo "[daily_cycle] build_packs.py failed (continuing)."
 
 # 6) Download-ZIPs aktualisieren
-echo "[daily_cycle] build_download_zips.py..."
-python automations/build_download_zips.py || echo "[daily_cycle] build_download_zips.py failed (continuing)."
+if [ -f "automations/build_download_zips.py" ]; then
+  echo "[daily_cycle] build_download_zips.py..."
+  python automations/build_download_zips.py || echo "[daily_cycle] build_download_zips.py failed (continuing)."
+fi
 
-# 7) QA-Report für frische Inhalte
-echo "[daily_cycle] qa_check_content.py..."
-python automations/qa_check_content.py || echo "[daily_cycle] qa_check_content.py failed (continuing)."
+# 7) QA-Reports generieren (Content & Packs)
+if [ -f "automations/qa_check_content.py" ]; then
+  echo "[daily_cycle] qa_check_content.py..."
+  python automations/qa_check_content.py || echo "[daily_cycle] qa_check_content.py failed (continuing)."
+fi
+
+if [ -f "automations/qa_check_packs.py" ]; then
+  echo "[daily_cycle] qa_check_packs.py..."
+  python automations/qa_check_packs.py || echo "[daily_cycle] qa_check_packs.py failed (continuing)."
+fi
 
 echo "[daily_cycle] Done."
