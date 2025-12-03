@@ -6,9 +6,3 @@
 [build.environment]
   HUGO_VERSION = "0.134.0"
   HUGO_ENV = "production"
-
-# Optional: redirects, falls später nötig
-[[redirects]]
-  from = "/*"
-  to   = "/index.html"
-  status = 200
