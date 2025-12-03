@@ -8,29 +8,16 @@ Sync product pages with pack JSON files.
     - überschreibt den Block ab der ersten "## Included articles" Überschrift
       mit einer automatisch generierten Liste der Artikel aus dem JSON
 
-Voraussetzungen:
-- Die JSON-Dateien enthalten mindestens:
-    {
-      "pack_slug": "ai-rag-pack-1",
-      "description": "...",
-      "items": [
-        {"title": "...", "url": "/blog/..."}, ...
-      ]
-    }
-
 Aufruf (vom Ordner `site/` aus):
     python ../automations/sync_packs.py
 """
 
 import json
-import os
 from pathlib import Path
 
 
 def find_repo_root() -> Path:
-    """Bestimme Repo-Root relativ zu dieser Datei."""
     here = Path(__file__).resolve()
-    # /.../automations/sync_packs.py -> Repo-Root = parent
     return here.parent.parent
 
 
@@ -45,15 +32,26 @@ def load_pack_json(path: Path) -> dict:
         return json.load(f)
 
 
-def update_frontmatter_description(text: str, new_desc: str) -> str:
+def sanitize_for_toml(s: str) -> str:
+    """
+    Macht einen String TOML-sicher:
+    - Backslashes escapen
+    - Anführungszeichen escapen
+    - Zeilenumbrüche entfernen
+    """
+    s = s.replace("\\", "\\\\")
+    s = s.replace('"', '\\"')
+    s = s.replace("\r", " ").replace("\n", " ")
+    return s
+
+
+def update_frontmatter_description(text: str, new_desc_raw: str) -> str:
     """
     Ersetze oder füge `description = "..."` im TOML-Frontmatter ein.
     Frontmatter ist zwischen den ersten beiden '+++' Blöcken.
     """
-    # Frontmatter-Grenzen finden
     first = text.find("+++")
     if first == -1:
-        # Kein Frontmatter -> unverändert lassen
         return text
 
     second = text.find("+++", first + 3)
@@ -63,7 +61,9 @@ def update_frontmatter_description(text: str, new_desc: str) -> str:
     header = text[first:second + 3]
     body = text[second + 3 :]
 
-    # Header Zeilenweise bearbeiten
+    new_desc = sanitize_for_toml(new_desc_raw)
+    desc_value = f'description = "{new_desc}"'
+
     lines = header.splitlines()
     desc_line_idx = None
     for i, line in enumerate(lines):
@@ -71,17 +71,9 @@ def update_frontmatter_description(text: str, new_desc: str) -> str:
             desc_line_idx = i
             break
 
-    desc_value = f'description = "{new_desc}"'
-
     if desc_line_idx is not None:
         lines[desc_line_idx] = desc_value
     else:
-        # Vor der schließenden +++ einfügen (aber nach der ersten Zeile)
-        # Header hat typischerweise:
-        # +++
-        # title = ...
-        # ...
-        # +++
         insert_at = max(1, len(lines) - 1)
         lines.insert(insert_at, desc_value)
 
@@ -90,44 +82,26 @@ def update_frontmatter_description(text: str, new_desc: str) -> str:
 
 
 def generate_included_block(items: list[dict]) -> str:
-    """
-    Erzeuge den kompletten Block:
-
-    ## Included articles
-
-    - <a href="...">Title</a>
-    ...
-    """
     lines = []
     lines.append("## Included articles")
     lines.append("")
     for item in items:
         title = item.get("title", "Untitled")
         url = item.get("url") or item.get("slug") or "#"
-
-        # Sicherstellen, dass URL mit / beginnt, falls nur slug übergeben wurde
         if not url.startswith("http") and not url.startswith("/"):
             url = f"/blog/{url}/"
-
         lines.append(f'- <a href="{url}">{title}</a>')
-
-    lines.append("")  # trailing newline
+    lines.append("")
     return "\n".join(lines)
 
 
 def replace_included_section(body: str, new_block: str) -> str:
-    """
-    Ersetze ab der ersten Zeile '## Included articles' bis zum Ende
-    durch `new_block`. So werden doppelte / alte Blöcke entfernt.
-    """
     marker = "## Included articles"
     idx = body.find(marker)
     if idx == -1:
-        # Marker fehlt -> Block einfach ans Ende dranhängen
         body = body.rstrip() + "\n\n" + new_block + "\n"
         return body
 
-    # Alles vor dem Marker behalten
     prefix = body[:idx].rstrip()
     return prefix + "\n\n" + new_block + "\n"
 
@@ -147,15 +121,12 @@ def sync_pack(pack: dict) -> None:
 
     text = md_path.read_text(encoding="utf-8")
 
-    # 1) description im Frontmatter aktualisieren (kurzer Teaser)
     if pack.get("description"):
         text = update_frontmatter_description(text, pack["description"])
 
-    # 2) Included-Block aus Items generieren
     items = pack.get("items", [])
     included_block = generate_included_block(items)
 
-    # Text in Frontmatter + Body splitten, damit wir nur den Body anfassen
     first = text.find("+++")
     second = text.find("+++", first + 3) if first != -1 else -1
     if first != -1 and second != -1:
@@ -166,7 +137,6 @@ def sync_pack(pack: dict) -> None:
         body = text
 
     new_body = replace_included_section(body, included_block)
-
     new_text = header + new_body
     md_path.write_text(new_text, encoding="utf-8")
 

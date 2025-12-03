@@ -31,6 +31,7 @@ This pack gives you a focused collection of real-world RAG issues and their fixe
 \
 
 >>>>>>> 47c1b2d (Automation update)
+
 ## Included articles
 
 - <a href="/blog/openai-api-key-being-leaked-even-though-its-stored-securely-on-server-.-need-help-diagnosing/">OpenAI API Key Being Leaked Even Though It’s Stored Securely on Server . Need Help Diagnosing</a>
@@ -40,7 +41,4 @@ This pack gives you a focused collection of real-world RAG issues and their fixe
 - <a href="/blog/convert-this-date-time-format-into-pandas-datetime/">Convert this date/time format into pandas datetime</a>
 - <a href="/blog/how-to-edit-replace-text-in-a-pdf-without-changing-formatting/">How to edit/replace text in a PDF without changing formatting</a>
 - <a href="/blog/implement-stl-flexi-toy-maker---add-hinges-to-stl-files-programmatically/">Implement STL flexi toy maker / add hinges to STL files programmatically</a>
-<<<<<<< HEAD
-=======
 
->>>>>>> 47c1b2d (Automation update)
