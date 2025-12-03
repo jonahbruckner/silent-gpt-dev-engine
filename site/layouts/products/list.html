@@ -3,21 +3,21 @@
   <div class="container">
     <h1>Available Product Packs</h1>
 
-    {{ range .Pages }}
-      <article class="post-list-item">
-        <!-- Produktname: nur Text, kein Link -->
-        <h2>{{ .Title }}</h2>
+    <div class="post-list">
+      {{ range .Pages.ByTitle }}
+        <article class="post-list-item">
+          <h2>{{ .Title }}</h2>
 
-        {{ with .Params.description }}
-          <p class="single-description">{{ . }}</p>
-        {{ end }}
+          {{ with .Params.description }}
+            <p class="single-description">{{ . }}</p>
+          {{ end }}
 
-        <!-- Einziger Link: View pack → -->
-        <a class="post-readmore" href="{{ .RelPermalink }}">
-          View pack →
-        </a>
-      </article>
-    {{ end }}
+          <p class="post-readmore">
+            <a href="{{ .RelPermalink }}">View pack →</a>
+          </p>
+        </article>
+      {{ end }}
+    </div>
   </div>
 </section>
 {{ end }}
