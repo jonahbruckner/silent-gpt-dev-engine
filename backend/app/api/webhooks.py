@@ -3,7 +3,7 @@ import os
 import stripe
 from fastapi import APIRouter, HTTPException, Request
 
-from app.utils.email import send_download_email
+from ..utils.email import send_download_email
 
 router = APIRouter(tags=["webhooks"])
 
