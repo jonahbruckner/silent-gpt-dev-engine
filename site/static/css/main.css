@@ -1,7 +1,3 @@
-.site-header {
-  border-bottom: none;
-}
-
 :root {
   --bg: #050711;
   --bg-alt: #0c0f1a;
@@ -40,38 +36,183 @@ a:hover {
   padding: 1.5rem;
 }
 
-.site-header,
-.site-footer {
+/* ==================== */
+/*   GLOBAL HEADER      */
+/* ==================== */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
   border-bottom: 1px solid var(--border);
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), #020617 55%, #000 100%);
+  backdrop-filter: blur(16px);
 }
+
+.site-header .container {
+  max-width: 1100px;
+  padding: 0.9rem 1.9rem;
+}
+
+/* Hauptzeile im Header */
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem;
+}
+
+/* Logo / Brand */
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.header-logo-mark {
+  width: 32px;
+  height: 32px;
+  margin-right: 0.75rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #22c55e, #4f46e5);
+  box-shadow: 0 0 18px rgba(79, 70, 229, 0.7);
+}
+
+.header-logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-logo-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.header-logo-sub {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+  margin-top: 0.05rem;
+}
+
+/* Navigation */
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.8rem;
+  margin-left: 3rem;
+  flex: 1;
+}
+
+.header-nav a {
+  font-size: 0.97rem;
+  font-weight: 600;     /* fett */
+  letter-spacing: 0.04em;
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.header-nav a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Rechte Seite: Engine-Status + Language */
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* Engine-Status-Pill */
+
+.engine-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(22, 163, 74, 0.09);
+  border: 1px solid rgba(34, 197, 94, 0.5);
+  font-size: 0.78rem;
+  color: #bbf7d0;
+}
+
+.engine-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+}
+
+.engine-pill-label {
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.engine-pill-status {
+  font-weight: 600;
+}
+
+/* Language Switch (optisch, DE noch ohne Routing) */
+
+.lang-switch {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.lang-chip {
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: default;
+}
+
+.lang-chip.is-active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.lang-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================== */
+/*     FOOTER           */
+/* ==================== */
+
 .site-footer {
   border-top: 1px solid var(--border);
-  border-bottom: none;
   margin-top: 3rem;
   padding: 1.5rem 0;
 }
 
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.footer-inner {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
-.logo {
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-.nav-links a {
-  margin-left: 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 600;
+.footer-meta {
+  margin-top: 0.4rem;
 }
 
-.nav-links a:hover {
-  text-decoration: none;
-  opacity: 0.9;
-}
-
-/* Hero */
+/* ==================== */
+/*        HERO          */
+/* ==================== */
 
 .hero {
   padding: 3rem 0 1rem;
@@ -206,32 +347,6 @@ a:hover {
   padding-left: 1.2rem;
 }
 
-/* Footer */
-
-.footer-inner {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--muted);
-}
-.footer-meta {
-  margin-top: 0.4rem;
-}
-
-/* Responsive */
-
-@media (max-width: 720px) {
-  .hero-inner {
-    flex-direction: column;
-  }
-  .nav {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .nav-links {
-    margin-top: 0.5rem;
-  }
-}
-
 /* ========================= */
 /* Thank-you / Download Page */
 /* ========================= */
@@ -345,242 +460,28 @@ a:hover {
   line-height: 1.6;
 }
 
-/* ========================= */
-/* Global Header (sg-header) */
-/* ========================= */
-
-.sg-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(16px);
-  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.98));
-  border-bottom: 1px solid rgba(51, 65, 85, 0.85);
-}
-
-.sg-header-inner {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 1.1rem 1.9rem;          /* mehr Höhe */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.75rem;
-}
-
-/* Logo-Bereich */
-
-.sg-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  text-decoration: none;
-}
-
-.sg-logo-mark {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #4f46e5, #22c55e);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.35),
-              0 18px 40px rgba(15, 23, 42, 0.9);
-}
-
-.sg-logo-dot {
-  position: absolute;
-  inset: 10px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.9);
-}
-
-.sg-logo-orbit {
-  position: absolute;
-  inset: 6px;
-  border-radius: 999px;
-  border: 1px solid rgba(191, 219, 254, 0.6);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-}
-
-.sg-logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.sg-logo-title {
-  font-size: 1.15rem;             /* größer */
-  font-weight: 800;               /* sehr markant */
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.sg-logo-subtitle {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--muted);
-}
-
-/* Navigation */
-
-.sg-nav {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-}
-
-.sg-nav-link {
-  font-size: 0.97rem;
-  font-weight: 600;               /* fett wie gewünscht */
-  letter-spacing: 0.04em;
-  text-transform: none;
-  color: #e5e7eb;
-  text-decoration: none;
-}
-
-.sg-nav-link:hover {
-  color: #ffffff;
-  text-decoration: none;
-}
-
-/* Rechte Seite: Status + Language */
-
-.sg-header-right {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.sg-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(22, 163, 74, 0.09);
-  border: 1px solid rgba(34, 197, 94, 0.5);
-  font-size: 0.78rem;
-  color: #bbf7d0;
-}
-
-.sg-status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: #22c55e;
-  box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
-}
-
-.sg-status-label {
-  font-weight: 600;
-}
-
-.lang-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1px solid rgba(55, 65, 81, 0.8);
-  font-size: 0.8rem;
-}
-
-.lang-current,
-.lang-link {
-  padding: 0.12rem 0.4rem;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: default;
-}
-
-.lang-current {
-  background: rgba(79, 70, 229, 0.95);
-  color: #e5e7eb;
-}
-
-.lang-link {
-  color: #9ca3af;
-  cursor: not-allowed;  /* vorerst nur Deko */
-}
-
-/* Mobile Anpassungen */
+/* ==================== */
+/*   RESPONSIVE HEADER  */
+/* ==================== */
 
 @media (max-width: 720px) {
-  .sg-header-inner {
-    padding: 0.9rem 1.1rem;
-    flex-wrap: wrap;
+  .hero-inner {
+    flex-direction: column;
+  }
+
+  .header-bar {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.75rem;
   }
-  .sg-nav {
-    gap: 1.1rem;
-    font-size: 0.9rem;
+
+  .header-nav {
+    margin-left: 0;
+    gap: 1.2rem;
   }
-  .sg-header-right {
-    margin-left: auto;
+
+  .header-right {
+    align-self: stretch;
+    justify-content: space-between;
   }
 }
-
-/* ===== Enhanced global header ===== */
-
-.site-header {
-  padding: 1.0rem 0; /* höherer Header */
-  border-bottom: 1px solid rgba(15, 23, 42, 0.85);
-  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96) 0, #020617 55%, #000 100%);
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(18px);
-}
-
-/* Container im Header etwas breiter wirken lassen */
-.site-header .container {
-  max-width: 1100px;
-}
-
-/* Brand/Logo größer & markanter */
-.logo {
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* Navigation kräftiger und mit mehr Abstand */
-.nav {
-  gap: 2.5rem;
-}
-
-.nav-links a {
-  margin-left: 1.4rem;
-  font-size: 0.98rem;
-  font-weight: 600;       /* fett */
-  letter-spacing: 0.03em;
-}
-
-/* Sprache-Chips (falls noch nicht in der CSS) etwas stärker */
-.language-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: 1.5rem;
-}
-
-.language-switch .lang-pill {
-  padding: 0.18rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  border: 1px solid rgba(148, 163, 184, 0.55);
-  color: #e5e7eb;
-  opacity: 0.7;
-}
-
-.language-switch .lang-pill.active {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: #fff;
-  opacity: 1;
-}
-

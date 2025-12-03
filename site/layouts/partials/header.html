@@ -1,37 +1,38 @@
-<header class="sg-header">
-  <div class="sg-header-inner">
+<!-- site/layouts/partials/header.html -->
+<header class="site-header">
+  <div class="container header-bar">
     <!-- Logo / Brand -->
-    <a href="{{ "/" | relURL }}" class="sg-logo">
-      <div class="sg-logo-mark">
-        <span class="sg-logo-dot"></span>
-        <span class="sg-logo-orbit"></span>
-      </div>
-      <div class="sg-logo-text">
-        <span class="sg-logo-title">SilentGPT</span>
-        <span class="sg-logo-subtitle">Dev Engine</span>
-      </div>
+    <a href="{{ "/" | relURL }}" class="header-logo">
+      <span class="header-logo-mark"></span>
+      <span class="header-logo-text">
+        <span class="header-logo-title">SILENTGPT</span>
+        <span class="header-logo-sub">Dev Engine</span>
+      </span>
     </a>
 
-    <!-- Navigation -->
-    <nav class="sg-nav">
-      <a href="{{ "blog/" | relLangURL }}">Blog</a>
-      <a href="{{ "how-it-works/" | relLangURL }}">How it works</a>
-      <a href="{{ "products/" | relLangURL }}">Products</a>
-
+    <!-- Haupt-Navigation -->
+    <nav class="header-nav">
+      <a href="{{ "/blog/" | relURL }}">Blog</a>
+      <a href="{{ "/how-it-works/" | relURL }}">How it works</a>
+      <a href="{{ "/products/" | relURL }}">Products</a>
     </nav>
 
-    <!-- Right side: Status + (vorerst passiver) Language Switch -->
-    <div class="sg-header-right">
-      <span class="sg-status-pill">
-        <span class="sg-status-dot"></span>
-        Engine: <span class="sg-status-label">online</span>
-      </span>
+    <!-- Status + Language -->
+    <div class="header-right">
+      <div class="engine-pill">
+        <span class="engine-dot"></span>
+        <span class="engine-pill-label">Engine:</span>
+        <span class="engine-pill-status">online</span>
+      </div>
 
-      <!-- Noch kein echter i18n-Switch, nur UI.
-           Wichtig: KEINE Hugo-Funktionen hier, damit der Build nicht crasht. -->
       <div class="lang-switch">
-        <span class="lang-current">EN</span>
-        <span class="lang-link">DE</span>
+        <!-- aktuell nur EN wirklich vorhanden, daher DE optisch, aber ohne Routing -->
+        <button type="button" class="lang-chip is-active" data-lang="en">
+          EN
+        </button>
+        <button type="button" class="lang-chip" data-lang="de" disabled>
+          DE
+        </button>
       </div>
     </div>
   </div>
