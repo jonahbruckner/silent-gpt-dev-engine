@@ -1,36 +1,18 @@
 +++
-
-title = "AI \& RAG Troubleshooting Pack #1"
-
+title = "AI RAG Troubleshooting Pack #1"
 slug = "ai-rag-pack-1"
-<<<<<<< HEAD
-date = "2025-12-03T01:32:27.457116+00:00"
-=======
-
-date = "2025-12-02T12:00:23.001376+00:00"
-
->>>>>>> 47c1b2d (Automation update)
+date = 2025-12-02T12:00:23Z
 description = "A curated bundle of SilentGPT micro-tutorials for debugging and improving your retrieval-augmented generation systems."
-
-pack\_slug = "ai-rag-pack-1"
-
-price\_label = "8,99 €"
-
+pack_slug = "ai-rag-pack-1"
+price_label = "8,99 €"
 type = "products"
-
 +++
 
+# AI & RAG Troubleshooting Pack #1
 
-
-This pack gives you a focused collection of real-world RAG issues and their fixes. Du lernst, wie du Embeddings, Vektorsuche, Kontextfenster und Prompting aufeinander abstimmst, um stabile Antworten zu bekommen – statt zufälliger Halluzinationen. Ideal, wenn du an produktionsnahen RAG-Pipelines arbeitest und weniger Zeit mit Trial-and-Error verschwenden willst.
-
-<<<<<<< HEAD
-=======
-
-
-\
-
->>>>>>> 47c1b2d (Automation update)
+This pack gives you a focused collection of real-world RAG issues and their fixes.  
+You’ll learn how to tune embeddings, vector search, context windows and prompting to get stable answers instead of random hallucinations.  
+Ideal if you work on production-adjacent RAG pipelines and want to save time instead of trial-and-error debugging.
 
 ## Included articles
 
