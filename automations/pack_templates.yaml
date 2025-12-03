@@ -1,0 +1,138 @@
+# Blueprint-Definitionen für deine Packs.
+# Du kannst später einfach neue Einträge ergänzen (z.B. python-data-pack-2).
+
+- topic: "python-data"
+  pack_slug: "python-data-pack-1"
+  min_items: 10
+  max_items: 40
+  title: "Python Data Engineering Pack #1"
+  short_description: >
+    SilentGPT micro-tutorials für das Bereinigen, Transformieren und
+    Automatisieren von Daten-Workflows in Python.
+  long_description: |
+    Dieses Pack fokussiert sich auf typische Data-Engineering-Alltagsaufgaben
+    mit Python: Daten einlesen, bereinigen, transformieren, validieren und
+    automatisiert weiterverarbeiten. Die Beispiele sind praxisnah gehalten
+    und orientieren sich an wiederkehrenden Problemen, die in BI-, Analytics-
+    und Engineering-Teams ständig auftauchen. Ideal, wenn du deine
+    Daten-Pipelines robuster und automatisierter machen willst.
+  hero_body: >
+    Turn messy CSVs und APIs in saubere, automatisierte Daten-Pipelines –
+    mit praxisnahen Python-Patterns, die du direkt in deinen Alltag
+    übernehmen kannst.
+  description_prompt: >
+    Kurz und knackig erklären, für wen das Pack ist (Data Engineers,
+    BI/Analytics), welche typischen Probleme es löst (Dirty Data, manuelle
+    Excel-Hölle) und dass es aus echten Micro-Tutorials besteht.
+  keywords:
+    - python
+    - pandas
+    - numpy
+    - dataframe
+
+- topic: "fastapi-backend"
+  pack_slug: "fastapi-backend-pack-1"
+  min_items: 8
+  max_items: 30
+  title: "FastAPI Backend Pack #1"
+  short_description: >
+    Patterns und Rezepte, um production-ready FastAPI-Services schneller zu
+    shippen.
+  long_description: |
+    Dieses Pack bündelt Best Practices für FastAPI-Backends, von Routing und
+    Settings über Background-Jobs bis hin zur Integration mit Datenbanken und
+    externen Services. Du bekommst konkrete Snippets und Lösungswege, die in
+    echten Projekten funktionieren, statt generischer Hello-World-Beispiele.
+    Perfekt, wenn du dein nächstes Backend stabil und wartbar aufsetzen willst.
+  hero_body: >
+    Ship dein nächstes FastAPI-Backend mit production-ready Patterns für
+    Routing, Settings, Background-Jobs und DB-Layer – ohne jedes Mal bei
+    Null zu starten.
+  description_prompt: >
+    Fokus auf Production-Backends, Stabilität, Wartbarkeit und typische
+    Integrationen (DB, Background Tasks, Settings). Klar machen, dass es
+    über einfache Tutorials hinausgeht.
+  keywords:
+    - fastapi
+    - api
+    - backend
+
+- topic: "ai-rag"
+  pack_slug: "ai-rag-pack-1"
+  min_items: 8
+  max_items: 30
+  title: "AI & RAG Troubleshooting Pack #1"
+  short_description: >
+    Ein kuratiertes Bundle von SilentGPT-Micro-Tutorials für das Debuggen
+    und Verbessern deiner RAG-Systeme.
+  long_description: |
+    Dieses Pack gibt dir eine fokussierte Sammlung realer RAG-Issues und ihrer
+    Fixes. Du lernst, wie du Embeddings, Vektorsuche, Kontextfenster und
+    Prompting aufeinander abstimmst, um stabile Antworten zu bekommen – statt
+    zufälliger Halluzinationen. Ideal, wenn du an produktionsnahen
+    RAG-Pipelines arbeitest und weniger Zeit mit Trial-and-Error verschwenden
+    willst.
+  hero_body: >
+    Fix die häufigsten RAG-Fails schneller – von kaputtem Chunking und
+    noisigen Embeddings bis hin zu Prompt-Problemen in produktiven
+    Pipelines. Hol dir copy-paste-fähige Lösungen statt endlosem Debugging.
+  description_prompt: >
+    Herausstellen, dass das Pack typische RAG-Probleme (Halluzinationen,
+    schlechte Treffer, Kontextverlust) adressiert und konkrete Debugging-
+    Patterns liefert.
+  keywords:
+    - rag
+    - langchain
+    - vector
+    - embedding
+    - llm
+
+- topic: "devops-docker"
+  pack_slug: "devops-docker-pack-1"
+  min_items: 5
+  max_items: 25
+  title: "DevOps & Docker Pack #1"
+  short_description: >
+    Kompakte Docker- und Deployment-Patterns für moderne Backend-Services.
+  long_description: |
+    Hier findest du kompakte How-tos rund um Containerisierung, lokale
+    Entwicklungsumgebungen und einfache Deployment-Setups. Der Fokus liegt
+    darauf, Services reproduzierbar zu machen, statt sie jedes Mal manuell
+    zu konfigurieren. Ideal für Entwickler:innen, die ihre Projekte ohne
+    großen Overhead bereitstellen möchten.
+  hero_body: >
+    Containerize your services once and run them anywhere – mit einfachen,
+    wiederverwendbaren Docker- und Deployment-Patterns für deinen Dev-Alltag.
+  description_prompt: >
+    Betonung auf Reproduzierbarkeit, lokale Dev-Umgebungen und einfache
+    Deployments. Zielgruppe: Backend-Dev, der nicht Vollzeit-DevOps sein
+    will.
+  keywords:
+    - docker
+    - kubernetes
+    - container
+    - deploy
+
+- topic: "testing"
+  pack_slug: "testing-pack-1"
+  min_items: 5
+  max_items: 25
+  title: "Testing & Pytest Pack #1"
+  short_description: >
+    Praktische Testing-Patterns mit pytest, um deinen Python-Code
+    zuverlässiger zu machen.
+  long_description: |
+    Dieses Pack vermittelt dir praxiserprobte Patterns für Tests mit pytest:
+    von einfachen Unit-Tests über Fixtures bis hin zu strukturierten
+    Test-Suiten für größere Projekte. Du lernst, wie du Tests so schreibst,
+    dass sie dir wirklich helfen, statt nur Pflichtprogramm für das CI zu sein.
+  hero_body: >
+    Bau dir ein echtes Sicherheitsnetz für deinen Code mit pytest-Patterns,
+    die in Projekten eingesetzt werden – nicht nur in Tutorials.
+  description_prompt: >
+    Fokus auf realistische Testing-Patterns, Value von Tests im Alltag
+    (Refactoring, Bugs finden), nicht auf theoretische Testing-Lectures.
+  keywords:
+    - pytest
+    - unit test
+    - testing

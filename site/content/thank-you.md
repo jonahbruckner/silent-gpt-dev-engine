@@ -285,7 +285,7 @@ slug = "thank-you"
     return;
   }
 
-  const backendBase = "https://silent-gpt-backend.onrender.com";
+  const backendBase = "{{ .Site.Params.backendBaseURL }}";
   const downloadUrl =
     backendBase +
     "/download/" +

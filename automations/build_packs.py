@@ -3,11 +3,11 @@
 Automated pack builder for SilentGPT Dev Engine.
 
 - Liest veröffentlichte ContentItems aus der DB
-- Gruppiert sie nach groben Themen (Topic-Keywords)
-- Schreibt:
-    - JSON-Packs nach: site/static/packs/<pack_slug>.json
-    - Produktseiten nach: site/content/products/<pack_slug>.md
-- Commited & pusht Änderungen (nur Packs + Products) auf main
+- Mapped sie per Keywords auf Topics (aus pack_templates.yaml)
+- Generiert pro Template:
+    - JSON-Pack: site/static/packs/<pack_slug>.json
+    - Produktseite: site/content/products/<pack_slug>.md
+- Commitet & pusht Änderungen (nur Packs + Products) auf main.
 
 Dieses Skript läuft bei dir auf Render als eigener Job (build_packs)
 und kann auch lokal ausgeführt werden, wenn DATABASE_URL gesetzt ist.
@@ -16,10 +16,13 @@ und kann auch lokal ausgeführt werden, wenn DATABASE_URL gesetzt ist.
 import os
 import sys
 from datetime import datetime, timezone
-from typing import Dict, List
+from typing import Dict, List, Any
 import subprocess
 import json
-from pathlib import Path
+import re
+import unicodedata
+
+import yaml  # benötigt PyYAML
 
 ROOT_DIR = os.path.dirname(os.path.dirname(__file__))
 BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
@@ -34,8 +37,15 @@ from app.db import init_db
 STATIC_PACKS_DIR = os.path.join(ROOT_DIR, "site", "static", "packs")
 PRODUCTS_DIR = os.path.join(ROOT_DIR, "site", "content", "products")
 
-# Mindestanzahl Artikel pro Pack
-MIN_ITEMS_PER_PACK = 5
+# Fallback-Mindestanzahl Artikel pro Pack (falls Template nichts angibt)
+DEFAULT_MIN_ITEMS_PER_PACK = 5
+
+# Single Source of Truth für den Preis (in Cent)
+# Kann z.B. auf Render als PACK_PRICE_EUR_CENTS=899 gesetzt werden
+PACK_PRICE_EUR_CENTS = int(os.getenv("PACK_PRICE_EUR_CENTS", "899"))
+
+# Pfad zur Template-Datei
+PACK_TEMPLATES_PATH = os.path.join(ROOT_DIR, "automations", "pack_templates.yaml")
 
 init_db()
 
@@ -46,18 +56,23 @@ def ensure_dir(path: str):
 
 
 def slugify(text: str) -> str:
-    return (
-        text.lower()
-        .replace(" ", "-")
-        .replace("/", "-")
-        .replace("?", "")
-        .replace("#", "")
-        .replace(":", "")
-        .replace(",", "")
-        .replace("’", "")
-        .replace("“", "")
-        .replace("”", "")
-    )
+    # 1. Normalize (entfernt z. B. Akzente, „ü“ → „u“)
+    text = unicodedata.normalize("NFKD", text)
+    text = text.encode("ascii", "ignore").decode("ascii")
+
+    # 2. Lowercase
+    text = text.lower()
+
+    # 3. Alles, was nicht a-z, 0-9 oder '-' ist, durch '-' ersetzen
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+
+    # 4. Mehrere '-' zu einem '-' zusammenfassen
+    text = re.sub(r"-+", "-", text)
+
+    # 5. Leading/trailing '-' entfernen
+    text = text.strip("-")
+
+    return text
 
 
 def html_escape(text: str) -> str:
@@ -72,101 +87,48 @@ def html_escape(text: str) -> str:
     )
 
 
-# Sehr einfache Keyword-Heuristik für Themen
-TOPIC_KEYWORDS: Dict[str, List[str]] = {
-    "python-data": ["python", "pandas", "numpy", "dataframe"],
-    "fastapi-backend": ["fastapi", "api", "backend"],
-    "ai-rag": ["rag", "langchain", "vector", "embedding", "llm"],
-    "devops-docker": ["docker", "kubernetes", "container", "deploy"],
-    "testing": ["pytest", "unit test", "testing"],
-}
+def load_pack_templates() -> List[Dict[str, Any]]:
+    """
+    Lädt die Pack-Blueprints aus pack_templates.yaml.
+    """
+    if not os.path.isfile(PACK_TEMPLATES_PATH):
+        raise FileNotFoundError(
+            f"Pack template file not found: {PACK_TEMPLATES_PATH}"
+        )
 
-# Pack-Metadaten pro Topic:
-# - pack_title: H1 Titel & JSON title
-# - short_description: wird in Frontmatter als description verwendet (1 Satz)
-# - long_description: steht im Body unter der H1 (3+ Sätze, Marketing)
-# - price_label: wird im Frontmatter genutzt und im Layout angezeigt
-PACK_META: Dict[str, Dict[str, str]] = {
-    "ai-rag": {
-        "pack_title": "AI & RAG Troubleshooting Pack #1",
-        "short_description": (
-            "A curated bundle of SilentGPT micro-tutorials for debugging and improving "
-            "your retrieval-augmented generation systems."
-        ),
-        "long_description": (
-            "This pack gives you a focused collection of real-world RAG issues and their fixes. "
-            "Du lernst, wie du Embeddings, Vektorsuche, Kontextfenster und Prompting aufeinander "
-            "abstimmst, um stabile Antworten zu bekommen – statt zufälliger Halluzinationen. "
-            "Ideal, wenn du an produktionsnahen RAG-Pipelines arbeitest und weniger Zeit mit "
-            "Trial-and-Error verschwenden willst."
-        ),
-        "price_label": "8,99 €",
-    },
-    "fastapi-backend": {
-        "pack_title": "FastAPI Backend Pack #1",
-        "short_description": (
-            "Patterns and recipes for shipping production-ready FastAPI services faster."
-        ),
-        "long_description": (
-            "Dieses Pack bündelt Best Practices für FastAPI-Backends, von Routing und Settings "
-            "über Background-Jobs bis hin zur Integration mit Datenbanken und externen Services. "
-            "Du bekommst konkrete Snippets und Lösungswege, die in echten Projekten funktionieren, "
-            "statt generischer Hello-World-Beispiele. Perfekt, wenn du dein nächstes Backend "
-            "stabil und wartbar aufsetzen willst."
-        ),
-        "price_label": "8,99 €",
-    },
-    "python-data": {
-        "pack_title": "Python Data Engineering Pack #1",
-        "short_description": (
-            "SilentGPT micro-tutorials for cleaning, transforming and automating data workflows in Python."
-        ),
-        "long_description": (
-            "Dieses Pack fokussiert sich auf typische Data-Engineering-Alltagsaufgaben mit Python: "
-            "Daten einlesen, bereinigen, transformieren, validieren und automatisiert weiterverarbeiten. "
-            "Die Beispiele sind praxisnah gehalten und orientieren sich an wiederkehrenden Problemen, "
-            "die in BI-, Analytics- und Engineering-Teams ständig auftauchen. Ideal, wenn du deine "
-            "Daten-Pipelines robuster und automatisierter machen willst."
-        ),
-        "price_label": "8,99 €",
-    },
-    "devops-docker": {
-        "pack_title": "DevOps & Docker Pack #1",
-        "short_description": (
-            "A compact set of Docker and deployment patterns for modern backend services."
-        ),
-        "long_description": (
-            "Hier findest du kompakte How-tos rund um Containerisierung, lokale Entwicklungsumgebungen "
-            "und einfache Deployment-Setups. Der Fokus liegt darauf, Services reproduzierbar zu machen, "
-            "statt sie jedes Mal manuell zu konfigurieren. Ideal für Entwickler:innen, die ihre Projekte "
-            "ohne großen Overhead bereitstellen möchten."
-        ),
-        "price_label": "8,99 €",
-    },
-    "testing": {
-        "pack_title": "Testing & Pytest Pack #1",
-        "short_description": (
-            "Practical testing patterns with pytest to make your Python code more reliable."
-        ),
-        "long_description": (
-            "Dieses Pack vermittelt dir praxiserprobte Patterns für Tests mit pytest: von einfachen "
-            "Unit-Tests über Fixtures bis hin zu strukturierten Test-Suiten für größere Projekte. "
-            "Du lernst, wie du Tests so schreibst, dass sie dir wirklich helfen, statt nur Pflichtprogramm "
-            "für das CI zu sein."
-        ),
-        "price_label": "8,99 €",
-    },
-}
+    with open(PACK_TEMPLATES_PATH, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f) or []
+
+    if not isinstance(data, list):
+        raise ValueError("pack_templates.yaml must contain a top-level list")
+
+    return data
 
 
-def categorize_item(item: ContentItem) -> List[str]:
+def build_topic_keywords(templates: List[Dict[str, Any]]) -> Dict[str, List[str]]:
+    """
+    Baut ein Topic->Keywords-Mapping aus den Templates.
+    """
+    mapping: Dict[str, List[str]] = {}
+    for tpl in templates:
+        topic = tpl.get("topic")
+        if not topic:
+            continue
+        kws = tpl.get("keywords") or []
+        mapping[topic] = [kw.lower() for kw in kws]
+    return mapping
+
+
+def categorize_item(
+    item: ContentItem, topic_keywords: Dict[str, List[str]]
+) -> List[str]:
     """
     Gibt eine Liste von Topics zurück, zu denen dieser Artikel passt.
-    Basis: sehr simple Keyword-Suche in Titel + Body.
+    Basis: sehr simple Keyword-Suche in Titel + Body, gem. Templates.
     """
     text = ((item.title or "") + " " + (item.body_md or "")).lower()
-    topics = []
-    for topic, keywords in TOPIC_KEYWORDS.items():
+    topics: List[str] = []
+    for topic, keywords in topic_keywords.items():
         if any(kw in text for kw in keywords):
             topics.append(topic)
     return topics
@@ -247,6 +209,10 @@ def run_git_commands(commit_message: str = "auto: update packs"):
 
 def build_packs():
     print("[build_packs] Starting...")
+
+    templates = load_pack_templates()
+    topic_keywords = build_topic_keywords(templates)
+
     ensure_dir(STATIC_PACKS_DIR)
     ensure_dir(PRODUCTS_DIR)
 
@@ -256,44 +222,62 @@ def build_packs():
         print("[build_packs] No published items found, nothing to do.")
         return
 
+    # Items nach Topics bucketen
     buckets: Dict[str, List[ContentItem]] = {}
-
     for item in items:
-        topics = categorize_item(item)
+        topics = categorize_item(item, topic_keywords)
         if not topics:
             continue
         for topic in topics:
             buckets.setdefault(topic, []).append(item)
 
     if not buckets:
-        print("[build_packs] No items matched any topic keywords.")
+        print("[build_packs] No items matched any topic keywords from templates.")
         return
 
     generated_packs = 0
     now_iso = datetime.now(timezone.utc).isoformat()
 
-    for topic, topic_items in buckets.items():
-        if len(topic_items) < MIN_ITEMS_PER_PACK:
+    for tpl in templates:
+        topic = tpl.get("topic")
+        pack_slug = tpl.get("pack_slug")
+
+        if not topic or not pack_slug:
+            print(f"[build_packs] Template missing topic/pack_slug, skipping: {tpl}")
+            continue
+
+        topic_items = buckets.get(topic, [])
+        if not topic_items:
+            print(f"[build_packs] No items for topic '{topic}', skipping.")
+            continue
+
+        min_items = int(tpl.get("min_items") or DEFAULT_MIN_ITEMS_PER_PACK)
+        max_items = tpl.get("max_items")
+        if max_items is not None:
+            max_items = int(max_items)
+
+        if len(topic_items) < min_items:
             print(
                 f"[build_packs] Topic '{topic}' has only {len(topic_items)} items "
-                f"(min {MIN_ITEMS_PER_PACK}), skipping."
+                f"(min {min_items}), skipping."
             )
             continue
 
-        topic_slug = slugify(topic)
-        pack_slug = f"{topic_slug}-pack-1"
+        if max_items is not None and len(topic_items) > max_items:
+            topic_items = topic_items[:max_items]
 
-        meta = PACK_META.get(topic, {})
-        pack_title = meta.get("pack_title") or f"{topic.title()} Pack #1"
-        short_desc = meta.get(
+        pack_title = tpl.get("title") or f"{topic.title()} Pack #1"
+        short_desc = tpl.get(
             "short_description",
             f"A curated bundle of {len(topic_items)} SilentGPT micro-tutorials on {topic.replace('-', ' ')}.",
         )
-        long_desc = meta.get(
-            "long_description",
-            short_desc,
-        )
-        price_label = meta.get("price_label", "8,99 €")
+        long_desc = tpl.get("long_description", short_desc)
+        hero_body = tpl.get("hero_body")
+
+        # Preis-Label zentral aus PACK_PRICE_EUR_CENTS ableiten
+        cents = PACK_PRICE_EUR_CENTS
+        euro = cents / 100
+        price_label = f"{euro:.2f} €".replace(".", ",")
 
         # JSON-Pack
         json_path = os.path.join(STATIC_PACKS_DIR, f"{pack_slug}.json")
@@ -307,6 +291,8 @@ def build_packs():
 
             created = item.created_at or datetime.now(timezone.utc)
             slug = slugify(title or f"post-{item.id}")
+            if not slug:
+                slug = f"post-{item.id}"
             pack_items.append(
                 {
                     "id": item.id,
@@ -337,6 +323,7 @@ def build_packs():
         md_path = os.path.join(PRODUCTS_DIR, f"{pack_slug}.md")
         safe_title = pack_title.replace('"', '\\"')
         safe_desc = short_desc.replace('"', '\\"')
+        safe_hero = hero_body.replace('"', '\\"') if hero_body else ""
 
         front_matter_lines = [
             "+++",
@@ -347,10 +334,14 @@ def build_packs():
             f'pack_slug = "{pack_slug}"',
             f'topic = "{topic}"',
             f'price_label = "{price_label}"',
-            'type = "products"',
-            "+++",
-            "",
         ]
+
+        if hero_body:
+            front_matter_lines.append(f'hero_body = "{safe_hero}"')
+
+        front_matter_lines.append('type = "products"')
+        front_matter_lines.append("+++")
+        front_matter_lines.append("")
 
         body_lines = [
             f"# {pack_title}",
@@ -368,6 +359,8 @@ def build_packs():
                 continue
 
             slug = slugify(title or f"post-{item.id}")
+            if not slug:
+                slug = f"post-{item.id}"
             url = f"/blog/{slug}/"
             safe_title_html = html_escape(title)
             body_lines.append(f'- <a href="{url}">{safe_title_html}</a>')

@@ -9,7 +9,7 @@ enableRobotsTXT = true
   author = "SilentGPT Dev Engine"
   twitterHandle = ""   # leave empty if not used
   defaultImage = "/images/og-default.png"
-  backendBaseURL = "https://silent-gpt-backend.onrender.com"
+  backendBaseURL = "$BACKEND_BASE_URL"
 
 [taxonomies]
   tag = "tags"

@@ -1,3 +1,5 @@
+import re
+import unicodedata
 import os
 import sys
 from datetime import datetime
@@ -19,15 +21,24 @@ MAX_POSTS_PER_RUN = 3  # balanced: up to 3/day
 init_db()
 
 
-def slugify(title: str) -> str:
-    return (
-        title.lower()
-        .replace(" ", "-")
-        .replace("/", "-")
-        .replace("?", "")
-        .replace("#", "")
-        .replace(":", "")
-    )
+def slugify(text: str) -> str:
+    # 1. Normalize (entfernt z. B. Akzente, „ü“ → „u“)
+    text = unicodedata.normalize("NFKD", text)
+    text = text.encode("ascii", "ignore").decode("ascii")
+
+    # 2. Lowercase
+    text = text.lower()
+
+    # 3. Alles, was nicht a-z, 0-9 oder '-' ist, durch '-' ersetzen
+    text = re.sub(r"[^a-z0-9]+", "-", text)
+
+    # 4. Mehrere '-' zu einem '-' zusammenfassen
+    text = re.sub(r"-+", "-", text)
+
+    # 5. Leading/trailing '-' entfernen
+    text = text.strip("-")
+
+    return text
 
 
 def ensure_dir(path: str):
