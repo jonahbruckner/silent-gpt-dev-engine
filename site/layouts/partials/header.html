@@ -1,8 +1,40 @@
-<div class="container nav">
-  <a href="{{ .Site.BaseURL }}" class="logo">SilentGPT Dev Engine</a>
-  <nav class="nav-links">
-    <a href="{{ .Site.BaseURL }}blog/">Blog</a>
-    <a href="{{ .Site.BaseURL }}#how-it-works">How it works</a>
-    <a href="{{ .Site.BaseURL }}products">Products</a>
-  </nav>
-</div>
+<header class="sg-header">
+  <div class="sg-header-inner">
+    <!-- Logo / Brand -->
+    <a href="{{ "/" | relLangURL }}" class="sg-logo">
+      <div class="sg-logo-mark">
+        <span class="sg-logo-dot"></span>
+        <span class="sg-logo-orbit"></span>
+      </div>
+      <div class="sg-logo-text">
+        <span class="sg-logo-title">SilentGPT</span>
+        <span class="sg-logo-subtitle">Dev Engine</span>
+      </div>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sg-nav">
+      <a href="{{ "/blog/" | relLangURL }}" class="sg-nav-link">Blog</a>
+      <a href="{{ "/how-it-works/" | relLangURL }}" class="sg-nav-link">How it works</a>
+      <a href="{{ "/products/" | relLangURL }}" class="sg-nav-link">Products</a>
+    </nav>
+
+    <!-- Right side: Status + Lang-Switch -->
+    <div class="sg-header-right">
+      <span class="sg-status-pill">
+        <span class="sg-status-dot"></span>
+        Engine: <span class="sg-status-label">online</span>
+      </span>
+
+      <div class="lang-switch">
+        {{ range .Site.Languages }}
+          {{ if eq $.Site.Language.Lang .Lang }}
+            <span class="lang-current">{{ .LanguageName }}</span>
+          {{ else }}
+            <a href="{{ .RelPermalink }}" class="lang-link">{{ .LanguageName }}</a>
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</header>

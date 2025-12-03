@@ -328,7 +328,7 @@ slug = "thank-you"
     remaining -= 1;
     if (remaining <= 0) {
       clearInterval(timer);
-      if (!cancelled) window.location.href = "/blog/";
+      if (!cancelled) window.location.href = "/";
     } else if (counterEl) {
       counterEl.textContent = String(remaining);
     }
