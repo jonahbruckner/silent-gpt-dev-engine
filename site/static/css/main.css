@@ -515,3 +515,66 @@ a:hover {
     margin-left: auto;
   }
 }
+
+/* ===== Enhanced global header ===== */
+
+.site-header {
+  padding: 1.0rem 0; /* höherer Header */
+  border-bottom: 1px solid rgba(15, 23, 42, 0.85);
+  background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96) 0, #020617 55%, #000 100%);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(18px);
+}
+
+/* Container im Header etwas breiter wirken lassen */
+.site-header .container {
+  max-width: 1100px;
+}
+
+/* Brand/Logo größer & markanter */
+.logo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Navigation kräftiger und mit mehr Abstand */
+.nav {
+  gap: 2.5rem;
+}
+
+.nav-links a {
+  margin-left: 1.4rem;
+  font-size: 0.98rem;
+  font-weight: 600;       /* fett */
+  letter-spacing: 0.03em;
+}
+
+/* Sprache-Chips (falls noch nicht in der CSS) etwas stärker */
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 1.5rem;
+}
+
+.language-switch .lang-pill {
+  padding: 0.18rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  border: 1px solid rgba(148, 163, 184, 0.55);
+  color: #e5e7eb;
+  opacity: 0.7;
+}
+
+.language-switch .lang-pill.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: #fff;
+  opacity: 1;
+}
+
