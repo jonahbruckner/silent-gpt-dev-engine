@@ -1,0 +1,40 @@
+{{ define "main" }}
+
+<div class="product-page">
+
+  <h1>{{ .Title }}</h1>
+
+  <p class="product-description">
+    {{ .Params.description }}
+  </p>
+
+  <!-- Buy Button -->
+  <div class="buy-box" style="margin-top: 20px; margin-bottom: 30px;">
+    <a
+      href="{{ .Site.Params.backendBaseURL }}/pay/{{ .Params.pack_slug }}"
+      class="btn-primary"
+      style="
+        display: inline-block;
+        padding: 12px 22px;
+        background: #007bff;
+        color: white;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+      "
+    >
+      Kaufen – {{ .Params.price_label }}
+    </a>
+  </div>
+
+  <hr>
+
+  <h2>Was ist im Pack enthalten?</h2>
+
+  <div class="pack-long-description" style="margin-bottom: 20px;">
+    {{ .Content }}
+  </div>
+
+</div>
+
+{{ end }}

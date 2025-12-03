@@ -1,3 +1,10 @@
+"""
+Stripe Checkout + Download-Endpoint für SilentGPT Packs.
+
+- /pay/{pack_slug}  -> Stripe Checkout Session + Redirect
+- /download/{pack_slug}?session_id=...  -> prüft Zahlung, liefert ZIP-Datei
+"""
+
 import os
 from pathlib import Path
 
@@ -19,11 +26,13 @@ else:
 PUBLIC_SITE_URL = os.environ.get(
     "PUBLIC_SITE_URL",
     "https://example-netlify-site.netlify.app",
-)
+).rstrip("/")
+
 BACKEND_BASE_URL = os.environ.get(
     "BACKEND_BASE_URL",
     "https://example-backend.onrender.com",
-)
+).rstrip("/")
+
 PACK_PRICE_EUR_CENTS = int(os.environ.get("PACK_PRICE_EUR_CENTS", "899"))
 
 ROOT_DIR = Path(__file__).resolve().parents[3]

@@ -1,7 +1,8 @@
 +++
-title = ""
+title = "Danke für deinen Kauf"
 slug = "thank-you"
 +++
+
 
 {{< rawhtml >}}
 <style>
@@ -277,15 +278,21 @@ slug = "thank-you"
   // Download handling
   if (!pack || !sessionId) {
     console.warn("Missing pack or session_id in URL");
+    const msgEl = document.getElementById("pack-message");
     const link = document.getElementById("download-link");
+    if (msgEl) {
+      msgEl.textContent =
+        "Es fehlen Bestellinformationen in der URL. Bitte prüfe deine E-Mail – dort findest du deinen Download-Link.";
+    }
     if (link) {
-      link.textContent = "Error: missing download information";
+      link.textContent = "Download-Link per E-Mail prüfen";
       link.removeAttribute("href");
     }
     return;
   }
 
-  const backendBase = "{{ .Site.Params.backendBaseURL }}";
+
+  const backendBase = "{{ .Site.Params.backendBaseURL }}".replace(/\/$/, "");
   const downloadUrl =
     backendBase +
     "/download/" +
