@@ -3,7 +3,6 @@ title = "Danke für deinen Kauf"
 slug = "thank-you"
 +++
 
-
 {{< rawhtml >}}
 <style>
 .thankyou-outer {
@@ -213,7 +212,7 @@ slug = "thank-you"
 
       <p id="redirect-row" class="thankyou-redirect">
         You'll be redirected back to the blog in
-        <span id="redirect-counter">20</span> seconds.
+        <span id="redirect-counter">45</span> seconds.
         <button id="redirect-cancel" type="button" class="thankyou-link-btn">
           Stay here
         </button>
@@ -275,13 +274,16 @@ slug = "thank-you"
   const variant = Math.random() < 0.5 ? "A" : "B";
   if (root) root.dataset.variant = variant;
 
+  // *** WICHTIG: Backend-URL HART setzen, kein Hugo-Template ***
+  const backendBase = "https://silent-gpt-dev-engine.onrender.com";
+
   // Download handling
   if (!pack || !sessionId) {
     console.warn("Missing pack or session_id in URL");
-    const msgEl = document.getElementById("pack-message");
+    const msg = document.getElementById("pack-message");
     const link = document.getElementById("download-link");
-    if (msgEl) {
-      msgEl.textContent =
+    if (msg) {
+      msg.textContent =
         "Es fehlen Bestellinformationen in der URL. Bitte prüfe deine E-Mail – dort findest du deinen Download-Link.";
     }
     if (link) {
@@ -291,25 +293,25 @@ slug = "thank-you"
     return;
   }
 
-
-  const backendBase = "{{ .Site.Params.backendBaseURL }}".replace(/\/$/, "");
   const downloadUrl =
-    backendBase +
+    backendBase.replace(/\/$/, "") +
     "/download/" +
     encodeURIComponent(pack) +
     "?session_id=" +
     encodeURIComponent(sessionId);
 
   const link = document.getElementById("download-link");
-  if (link) link.href = downloadUrl;
+  if (link) {
+    link.href = downloadUrl;
+  }
 
-  // Auto-Download
+  // Auto-Download nach kurzer Zeit
   setTimeout(function () {
     window.location.href = downloadUrl;
-  }, 1000);
+  }, 1500);
 
-  // Redirect zurück zum Blog
-  const redirectTotal = 20;
+  // Redirect zurück zum Blog (nach 45s, wenn nicht abgebrochen)
+  const redirectTotal = 45;
   let remaining = redirectTotal;
   let cancelled = false;
 
