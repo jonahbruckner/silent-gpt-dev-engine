@@ -1,39 +1,24 @@
-<!-- site/layouts/partials/header.html -->
 <header class="site-header">
-  <div class="container header-bar">
-    <!-- Logo / Brand -->
-    <a href="{{ "/" | relURL }}" class="header-logo">
-      <span class="header-logo-mark"></span>
-      <span class="header-logo-text">
-        <span class="header-logo-title">SILENTGPT</span>
-        <span class="header-logo-sub">Dev Engine</span>
-      </span>
-    </a>
+  <div class="container">
+    <nav class="nav">
+      <!-- Logo / Brand -->
+      <a href="{{ "/" | relLangURL }}" class="logo">
+        <span>SILENTGPT</span>
+        <span style="display:block; font-size:0.8rem; font-weight:600;">DEV ENGINE</span>
+      </a>
 
-    <!-- Haupt-Navigation -->
-    <nav class="header-nav">
-      <a href="{{ "/blog/" | relURL }}">Blog</a>
-      <a href="{{ "/how-it-works/" | relURL }}">How it works</a>
-      <a href="{{ "/products/" | relURL }}">Products</a>
+      <!-- Hauptnavigation -->
+      <div class="nav-links">
+        <a href="{{ "/blog/" | relLangURL }}">Blog</a>
+        <a href="{{ "/how-it-works/" | relLangURL }}">How it works</a>
+        <a href="{{ "/products/" | relLangURL }}">Products</a>
+      </div>
+
+      <!-- Rechte Seite: Status + Language-Pills (optisch, noch ohne echte DE-Links) -->
+      <div class="language-switch">
+        <span class="lang-pill active">EN</span>
+        <span class="lang-pill">DE</span>
+      </div>
     </nav>
-
-    <!-- Status + Language -->
-    <div class="header-right">
-      <div class="engine-pill">
-        <span class="engine-dot"></span>
-        <span class="engine-pill-label">Engine:</span>
-        <span class="engine-pill-status">online</span>
-      </div>
-
-      <div class="lang-switch">
-        <!-- aktuell nur EN wirklich vorhanden, daher DE optisch, aber ohne Routing -->
-        <button type="button" class="lang-chip is-active" data-lang="en">
-          EN
-        </button>
-        <button type="button" class="lang-chip" data-lang="de" disabled>
-          DE
-        </button>
-      </div>
-    </div>
   </div>
 </header>
