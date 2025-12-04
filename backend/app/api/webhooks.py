@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
 if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
@@ -25,7 +24,6 @@ ROOT_DIR = Path(__file__).resolve().parents[3]
 METRICS_DIR = ROOT_DIR / "data" / "metrics"
 EVENTS_FILE = METRICS_DIR / "stripe_events.jsonl"
 SALES_FILE = METRICS_DIR / "sales_by_pack.json"
-
 
 def ensure_metrics_dir():
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
@@ -73,8 +71,14 @@ async def stripe_webhook(
     request: Request,
     stripe_signature: str = Header(None, alias="Stripe-Signature"),
 ):
-    if not STRIPE_WEBHOOK_SECRET:
-        logger.error("[webhooks] STRIPE_WEBHOOK_SECRET not configured")
+    # Secret bei jedem Request frisch aus der ENV lesen
+    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+
+    if not webhook_secret:
+        logger.error(
+            "[webhooks] STRIPE_WEBHOOK_SECRET not configured at runtime. "
+            f"os.getenv returned: {repr(webhook_secret)}"
+        )
         raise HTTPException(status_code=500, detail="Webhook not configured")
 
     payload = await request.body()
@@ -84,7 +88,7 @@ async def stripe_webhook(
         event = stripe.Webhook.construct_event(
             payload=payload,
             sig_header=stripe_signature,
-            secret=STRIPE_WEBHOOK_SECRET,
+            secret=webhook_secret,
         )
     except ValueError as e:
         # Invalid payload
@@ -133,7 +137,5 @@ async def stripe_webhook(
             amount_total,
             currency,
         )
-
-    # du kannst später weitere Event-Typen ergänzen, z.B. invoice.payment_failed etc.
 
     return {"status": "ok"}
