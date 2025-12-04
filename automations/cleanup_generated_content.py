@@ -1,66 +1,46 @@
 #!/usr/bin/env python3
-"""
-Cleanup script for generated, NON-source artifacts.
-
-This removes runtime files that should never be committed to git:
-
-- data/harvest/
-- data/packs/weekly/
-- data/social_queue/
-- drafts/local/
-- drafts/selected/
-
-It leaves:
-- site/static/packs/*.json
-- site/static/downloads/*.zip
-- site/content/*
-untouched.
-"""
-
-from pathlib import Path
 import shutil
+from pathlib import Path
+import logging
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT_DIR = Path(__file__).resolve().parents[1]
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [cleanup] %(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
+# Verzeichnisse, die WIRKLICH nur Runtime-Müll enthalten
+# WICHTIG: social_queue bleibt draußen, sonst haben die Social-Bots nichts mehr zu fressen.
 CLEAN_DIRS = [
-    ROOT / "data" / "harvest",
-    ROOT / "data" / "packs" / "weekly",
-    ROOT / "data" / "social_queue",
-    ROOT / "drafts" / "local",
-    ROOT / "drafts" / "selected",
+    ROOT_DIR / "data" / "harvest",
+    ROOT_DIR / "data" / "packs" / "weekly",
+    ROOT_DIR / "drafts" / "local",
+    ROOT_DIR / "drafts" / "selected",
 ]
 
 
-def clean_directory(path: Path):
+def clean_dir(path: Path):
     if not path.exists():
         return
-
-    if not path.is_dir():
-        return
-
+    logger.info("Cleaning %s", path)
     for child in path.iterdir():
-        if child.is_dir():
-            shutil.rmtree(child, ignore_errors=True)
-        else:
-            try:
+        try:
+            if child.is_file():
                 child.unlink()
-            except FileNotFoundError:
-                pass
+            elif child.is_dir():
+                shutil.rmtree(child)
+        except Exception as e:
+            logger.warning("Failed to remove %s: %s", child, e)
 
 
-def run():
-    print("[cleanup] Starting cleanup of generated runtime artifacts...")
+def main():
+    logger.info("Starting cleanup of generated runtime artifacts...")
     for d in CLEAN_DIRS:
-        print(f"[cleanup] Cleaning {d}")
-        clean_directory(d)
-
-    # Ensure dirs exist (so other scripts don't choke on missing dirs)
-    for d in CLEAN_DIRS:
-        d.mkdir(parents=True, exist_ok=True)
-
-    print("[cleanup] Done.")
+        clean_dir(d)
+    logger.info("Done.")
 
 
 if __name__ == "__main__":
-    run()
+    main()
