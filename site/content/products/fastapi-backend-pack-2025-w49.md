@@ -8,7 +8,7 @@ product_type: weekly_pack
 weekly_date: 2025-12-04
 week: 49
 year: 2025
-stripe_price_id: price_1Saa4qJ7zn1GTExXnlg6iH4w
+stripe_price_id: price_1Sad8JJ7zn1GTExXZJvijFwk
 included_articles:
   - original_id: q_2025_0001
     slug: "structuring-a-scalable-fastapi-project-with-background-tasks-database-access-and"
