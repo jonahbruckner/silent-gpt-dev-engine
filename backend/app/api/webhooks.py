@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Header, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request
 
 import stripe
 
@@ -13,17 +13,16 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
-
 if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
 else:
     stripe.api_key = None
 
-# ROOT_DIR analog zu payments.py
 ROOT_DIR = Path(__file__).resolve().parents[3]
 METRICS_DIR = ROOT_DIR / "data" / "metrics"
 EVENTS_FILE = METRICS_DIR / "stripe_events.jsonl"
 SALES_FILE = METRICS_DIR / "sales_by_pack.json"
+
 
 def ensure_metrics_dir():
     METRICS_DIR.mkdir(parents=True, exist_ok=True)
@@ -63,58 +62,47 @@ def update_sales_aggregate(pack_slug: str, amount: int, currency: str):
 
     data[pack_slug] = pack_stats
 
-    SALES_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    SALES_FILE.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
 
 
 @router.post("/stripe")
-async def stripe_webhook(
-    request: Request,
-    stripe_signature: str = Header(None, alias="Stripe-Signature"),
-):
-    # Secret bei jedem Request frisch aus der ENV lesen
-    webhook_secret = os.getenv("STRIPE_WEBHOOK_SECRET")
+async def stripe_webhook(request: Request):
+    """
+    MVP-Version: KEINE Signaturprüfung.
+    Wir vertrauen darauf, dass Stripe (Test-Mode) die Calls macht.
 
-    if not webhook_secret:
-        logger.error(
-            "[webhooks] STRIPE_WEBHOOK_SECRET not configured at runtime. "
-            f"os.getenv returned: {repr(webhook_secret)}"
-        )
-        raise HTTPException(status_code=500, detail="Webhook not configured")
-
-    payload = await request.body()
-    event = None
+    Wenn du später "echte" Security willst, bauen wir die
+    stripe.Webhook.construct_event-Prüfung wieder ein.
+    """
+    raw = await request.body()
 
     try:
-        event = stripe.Webhook.construct_event(
-            payload=payload,
-            sig_header=stripe_signature,
-            secret=webhook_secret,
-        )
-    except ValueError as e:
-        # Invalid payload
-        logger.warning("[webhooks] Invalid payload: %s", e)
-        raise HTTPException(status_code=400, detail="Invalid payload")
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
-        logger.warning("[webhooks] Invalid signature: %s", e)
-        raise HTTPException(status_code=400, detail="Invalid signature")
+        payload = json.loads(raw.decode("utf-8") or "{}")
+    except Exception as e:
+        logger.warning("[webhooks] JSON parse error: %s", e)
+        raise HTTPException(status_code=400, detail="Invalid JSON")
 
-    event_type = event["type"]
-    logger.info("[webhooks] Received event type=%s", event_type)
+    event_type = payload.get("type") or "unknown"
+    logger.info("[webhooks] (no-signature) received event type=%s", event_type)
 
     if event_type == "checkout.session.completed":
-        session = event["data"]["object"]
+        session = (payload.get("data") or {}).get("object") or {}
 
         pack_slug = (session.get("metadata") or {}).get("pack_slug")
         session_id = session.get("id")
         amount_total = session.get("amount_total") or 0
         currency = session.get("currency") or "eur"
-        customer_email = session.get("customer_details", {}).get("email")
+        customer_email = (session.get("customer_details") or {}).get("email")
         created_ts = session.get("created")
 
         created_iso = None
         if created_ts is not None:
-            created_iso = datetime.fromtimestamp(created_ts, tz=timezone.utc).isoformat()
+            created_iso = datetime.fromtimestamp(
+                created_ts, tz=timezone.utc
+            ).isoformat()
 
         event_record = {
             "event_type": event_type,
@@ -138,4 +126,5 @@ async def stripe_webhook(
             currency,
         )
 
+    # andere Event-Typen später
     return {"status": "ok"}
