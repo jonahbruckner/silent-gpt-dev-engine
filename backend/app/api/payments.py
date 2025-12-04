@@ -1,42 +1,54 @@
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
 import os
+from pathlib import Path
+
 import stripe
+from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import RedirectResponse, FileResponse
 
-router = APIRouter(prefix="/api/checkout", tags=["checkout"])
+router = APIRouter(tags=["payments"])
 
+# ------------------------------------------------------
+# Stripe Grundkonfiguration
+# ------------------------------------------------------
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-if not STRIPE_SECRET_KEY:
-    stripe.api_key = None
-else:
+if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
+else:
+    stripe.api_key = None  # erlaubt Start ohne Stripe
 
-PUBLIC_SITE_URL = os.environ.get("PUBLIC_SITE_URL", "").rstrip("/")
-if PUBLIC_SITE_URL == "":
-    PUBLIC_SITE_URL = "https://steady-lollipop-79396b.netlify.app"
+PUBLIC_SITE_URL = os.environ.get(
+    "PUBLIC_SITE_URL",
+    "https://steady-lollipop-79396b.netlify.app",
+).rstrip("/")
 
-BACKEND_BASE_URL = os.environ.get("BACKEND_BASE_URL", "").rstrip("/")
-if BACKEND_BASE_URL == "":
-    BACKEND_BASE_URL = "https://silent-gpt-dev-engine.onrender.com"
+BACKEND_BASE_URL = os.environ.get(
+    "BACKEND_BASE_URL",
+    "https://silent-gpt-dev-engine.onrender.com",
+).rstrip("/")
+
+ROOT_DIR = Path(__file__).resolve().parents[3]
+DOWNLOADS_DIR = ROOT_DIR / "site" / "static" / "downloads"
 
 
-@router.post("/session")
-async def create_checkout_session(item: dict):
-    """
-    Expects JSON:
-    {
-        "price_id": "price_...",
-        "pack_slug": "fastapi-backend-pack-2025-w49"
-    }
-    """
-    if stripe.api_key is None:
-        raise HTTPException(500, "Stripe not configured")
+# ------------------------------------------------------
+# 1) GET /pay/{pack_slug}?price_id=price_xxx
+#    -> erzeugt Stripe Checkout-Session, redirectet direkt
+# ------------------------------------------------------
+@router.get("/pay/{pack_slug}")
+async def create_checkout_and_redirect(
+    pack_slug: str,
+    price_id: str = Query(..., description="Stripe price_id for this pack"),
+):
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(
+            status_code=500,
+            detail="Payment service not configured (missing STRIPE_SECRET_KEY).",
+        )
 
-    price_id = item.get("price_id")
-    pack_slug = item.get("pack_slug")
-
-    if not price_id or not pack_slug:
-        raise HTTPException(400, "Missing price_id or pack_slug")
+    # Optional: prüfen, ob es die ZIP-Datei wirklich gibt
+    zip_path = DOWNLOADS_DIR / f"{pack_slug}.zip"
+    if not zip_path.exists():
+        raise HTTPException(status_code=404, detail="Pack ZIP not found on server")
 
     try:
         session = stripe.checkout.Session.create(
@@ -49,12 +61,50 @@ async def create_checkout_session(item: dict):
             ],
             metadata={"pack_slug": pack_slug},
             success_url=(
-                f"{PUBLIC_SITE_URL}/thank-you/?pack={pack_slug}"
-                "&session_id={{CHECKOUT_SESSION_ID}}"
+                f"{PUBLIC_SITE_URL}/thank-you/"
+                f"?pack={pack_slug}&session_id={{CHECKOUT_SESSION_ID}}"
             ),
             cancel_url=f"{PUBLIC_SITE_URL}/products/{pack_slug}/",
         )
     except Exception as e:
-        raise HTTPException(500, f"Stripe error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Stripe error: {e}")
 
-    return JSONResponse({"url": session.url})
+    # Browser-Navigation zu Stripe Checkout -> kein CORS
+    return RedirectResponse(session.url, status_code=303)
+
+
+# ------------------------------------------------------
+# 2) GET /download/{pack_slug}?session_id=cs_...
+#    -> prüft Zahlung + liefert ZIP
+# ------------------------------------------------------
+@router.get("/download/{pack_slug}")
+async def download_pack(pack_slug: str, session_id: str = Query(...)):
+    if not STRIPE_SECRET_KEY:
+        raise HTTPException(
+            status_code=500,
+            detail="Payment service not configured (missing STRIPE_SECRET_KEY).",
+        )
+
+    clean_session_id = session_id.strip("{}")
+
+    try:
+        session = stripe.checkout.Session.retrieve(clean_session_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Invalid session: {e}")
+
+    if session.payment_status != "paid":
+        raise HTTPException(status_code=402, detail="Payment not completed")
+
+    session_pack = (session.metadata or {}).get("pack_slug")
+    if session_pack != pack_slug:
+        raise HTTPException(status_code=403, detail="Pack mismatch")
+
+    zip_path = DOWNLOADS_DIR / f"{pack_slug}.zip"
+    if not zip_path.exists():
+        raise HTTPException(status_code=404, detail="Pack file not found")
+
+    return FileResponse(
+        path=zip_path,
+        filename=f"{pack_slug}.zip",
+        media_type="application/zip",
+    )

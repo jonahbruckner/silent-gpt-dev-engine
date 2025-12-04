@@ -86,7 +86,7 @@
     {{ $priceLabel = "Jetzt kaufen" }}
   {{ end }}
 
-  {{/* Pack-Slug: bevorzugt slug, fallback pack_slug (Kompatibilität) */}}
+  {{/* Pack-Slug: bevorzugt slug, fallback pack_slug */}}
   {{ $packSlug := "" }}
   {{ if .Params.slug }}
     {{ $packSlug = .Params.slug }}
@@ -94,17 +94,21 @@
     {{ $packSlug = .Params.pack_slug }}
   {{ end }}
 
-  <!-- BUY BUTTON (JS-Checkout über /api/checkout/session) -->
-  <button
-    id="buy-button"
-    class="buy-button"
-    type="button"
-    data-pack-slug="{{ $packSlug }}"
-  >
-    Kaufen – {{ $priceLabel }}
-  </button>
+  {{/* Stripe Price ID aus Frontmatter (kommt aus sync_packs_from_weekly.py) */}}
+  {{ $priceId := .Params.stripe_price_id }}
 
-  <p id="buy-error" class="buy-error" style="display:none;"></p>
+  {{ if and $packSlug $priceId }}
+    <a
+      class="buy-button"
+      href="{{ .Site.Params.backendBaseURL }}/pay/{{ $packSlug }}?price_id={{ $priceId }}"
+    >
+      Kaufen – {{ $priceLabel }}
+    </a>
+  {{ else }}
+    <p class="buy-error">
+      Für dieses Pack ist noch keine Stripe-Price-ID konfiguriert.
+    </p>
+  {{ end }}
 
   <!-- CONTENT SECTION -->
   <h2 class="section-title">Was ist im Pack enthalten?</h2>
@@ -114,99 +118,5 @@
   </div>
 
 </div>
-
-<script>
-(function() {
-  const btn = document.getElementById("buy-button");
-  if (!btn) return;
-
-  const packSlug = btn.dataset.packSlug;
-  const errorEl = document.getElementById("buy-error");
-
-  // Backend-URL aus Hugo config.toml
-  const backendBaseRaw = "{{ .Site.Params.backendBaseURL }}";
-  const backendBaseUrl = backendBaseRaw.replace(/\/$/, "");
-
-  if (!packSlug) {
-    if (errorEl) {
-      errorEl.style.display = "block";
-      errorEl.textContent = "Fehlende Pack-Slug-Konfiguration.";
-    }
-    btn.disabled = true;
-    return;
-  }
-
-  if (!backendBaseUrl) {
-    if (errorEl) {
-      errorEl.style.display = "block";
-      errorEl.textContent = "Backend-URL ist nicht konfiguriert.";
-    }
-    btn.disabled = true;
-    return;
-  }
-
-  async function fetchPackJson() {
-    const res = await fetch(`/packs/${packSlug}.json`, { cache: "no-store" });
-    if (!res.ok) {
-      throw new Error(`Pack-JSON nicht gefunden: /packs/${packSlug}.json`);
-    }
-    return await res.json();
-  }
-
-  async function createCheckoutSession(priceId) {
-    const res = await fetch(`${backendBaseUrl}/api/checkout/session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        price_id: priceId,
-        pack_slug: packSlug
-      })
-    });
-
-    if (!res.ok) {
-      let err;
-      try { err = await res.json(); } catch (_) {}
-      throw new Error(err?.detail || `Checkout-Fehler (HTTP ${res.status})`);
-    }
-
-    return await res.json();
-  }
-
-  btn.addEventListener("click", async () => {
-    const originalText = btn.innerText;
-    btn.disabled = true;
-    btn.innerText = "Weiter zum Checkout …";
-    if (errorEl) {
-      errorEl.style.display = "none";
-      errorEl.textContent = "";
-    }
-
-    try {
-      const pack = await fetchPackJson();
-      const priceId = pack.stripe_price_id;
-      if (!priceId) {
-        throw new Error("Für dieses Pack ist kein stripe_price_id konfiguriert.");
-      }
-
-      const session = await createCheckoutSession(priceId);
-      if (!session.url) {
-        throw new Error("Backend hat keine Checkout-URL zurückgegeben.");
-      }
-
-      window.location.href = session.url;
-    } catch (err) {
-      console.error(err);
-      if (errorEl) {
-        errorEl.style.display = "block";
-        errorEl.textContent = err.message;
-      } else {
-        alert("Checkout-Fehler: " + err.message);
-      }
-      btn.disabled = false;
-      btn.innerText = originalText;
-    }
-  });
-})();
-</script>
 
 {{ end }}
