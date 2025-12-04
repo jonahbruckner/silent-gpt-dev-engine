@@ -1,32 +1,32 @@
+import os
+
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 from .api import payments, webhooks
 from .db import init_db
 
 app = FastAPI(title="SilentGPT Dev Engine")
 
-# CORS-Konfiguration
-frontend_origin = os.getenv("FRONTEND_ORIGIN", "").rstrip("/")
-
-allowed_origins = []
-
-# falls in ENV gesetzt (empfohlen auf Render)
-if frontend_origin:
-    allowed_origins.append(frontend_origin)
-
-# lokale Dev-Origins
-allowed_origins.extend([
-    "http://localhost:1313",  # Hugo
-    "http://localhost:3000",  # falls du später ein SPA hast
-])
+# ------------------------------------------------------
+# CORS – für Netlify-Frontend + lokale Entwicklung
+# ------------------------------------------------------
+# Wenn du es enger machen willst:
+# origins = ["https://steady-lollipop-79396b.netlify.app"]
+# Fürs erste: alles erlauben, damit Preflight sicher durchgeht.
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allowed_origins or ["*"],  # notfalls alles, wenn nix gesetzt
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*"],   # GET, POST, OPTIONS, alles
     allow_headers=["*"],
 )
 
+# ------------------------------------------------------
+# Router registrieren
+# ------------------------------------------------------
 app.include_router(payments.router)
 app.include_router(webhooks.router)
 
