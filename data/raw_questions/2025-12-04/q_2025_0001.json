@@ -1,0 +1,6 @@
+{
+  "id": "q_2025_0001",
+  "question": "How can I structure a FastAPI project with background tasks, database access and dependency injection in a scalable way?",
+  "tags": ["fastapi", "python", "backend"],
+  "source": "manual-test"
+}

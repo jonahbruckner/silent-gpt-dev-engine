@@ -1,0 +1,42 @@
+{
+  "date": "2025-12-04",
+  "created_at": "2025-12-04T10:13:05.434524+00:00",
+  "items": [
+    {
+      "platform": "twitter",
+      "text": "Learn how to structure scalable FastAPI projects with clean separation of concerns, async DB access via dependency injection, and background task handling. Build maintainable APIs that grow with your app. #FastAPI #Python",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    },
+    {
+      "platform": "twitter",
+      "text": "Master background tasks and async database sessions in FastAPI for high-performance APIs. Explore best practices for modular code, dependency injection, and offloading heavy jobs with Celery. #BackendDev #FastAPI",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    },
+    {
+      "platform": "linkedin",
+      "text": "Building scalable APIs with FastAPI requires a clean project structure, effective dependency injection, and smart background task management. This article breaks down how to organize your code, manage async database sessions, and integrate background workers for better performance and maintainability. Dive in to streamline your FastAPI projects and boost your backend development workflow.",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    },
+    {
+      "platform": "devto",
+      "text": "Explore a practical guide to structuring scalable FastAPI projects with async database access, dependency injection, and background tasks. Learn how to keep your code modular and maintainable.",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    },
+    {
+      "platform": "medium",
+      "text": "Discover how to organize FastAPI projects for scalability by leveraging dependency injection, async DB sessions, and background task processing. A step-by-step approach to building clean, maintainable APIs.",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    },
+    {
+      "platform": "substack",
+      "text": "Scaling FastAPI apps means more than just writing endpoints—it’s about clean architecture, managing database sessions with dependency injection, and handling background jobs efficiently. This article walks you through a practical project structure that keeps your code modular and performant. If you’re looking to build maintainable APIs that grow with your needs, this is a must-read.",
+      "question_id": "q_2025_0001",
+      "article_date": "2025-12-04"
+    }
+  ]
+}

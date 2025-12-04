@@ -1,0 +1,24 @@
+{
+  "slug": "python-data-pack-2025-w49",
+  "title": "Python Data Engineering Pack – Week 49/2025",
+  "short_title": "Python Data Engineering Pack",
+  "category": "python-data",
+  "price_eur": 29,
+  "week": 49,
+  "year": 2025,
+  "weekly_date": "2025-12-04",
+  "generated_at": "2025-12-04T10:36:01.486257Z",
+  "articles": [
+    {
+      "original_id": "q_2025_0001",
+      "slug": "structuring-a-scalable-fastapi-project-with-background-tasks-database-access-and",
+      "title": "Structuring a Scalable FastAPI Project with Background Tasks, Database Access, and Dependency Injection",
+      "date": "2025-12-04T10:17:45.367076+00:00",
+      "tags": [
+        "backend",
+        "fastapi",
+        "python"
+      ]
+    }
+  ]
+}

@@ -274,25 +274,32 @@ slug = "thank-you"
   const variant = Math.random() < 0.5 ? "A" : "B";
   if (root) root.dataset.variant = variant;
 
-  // *** WICHTIG: Backend-URL HART setzen, kein Hugo-Template ***
+  // Backend-URL (hier aktuell hart, weil rawhtml/Markdown Go-Templates killen kann)
   const backendBase = "https://silent-gpt-dev-engine.onrender.com";
 
-  // Download handling
+  const downloadLink = document.getElementById("download-link");
+  const redirectRow = document.getElementById("redirect-row");
+  const counterEl = document.getElementById("redirect-counter");
+  const cancelBtn = document.getElementById("redirect-cancel");
+
+  // Fehlerfall: fehlende URL-Parameter
   if (!pack || !sessionId) {
     console.warn("Missing pack or session_id in URL");
-    const msg = document.getElementById("pack-message");
-    const link = document.getElementById("download-link");
-    if (msg) {
-      msg.textContent =
+    if (msgEl) {
+      msgEl.textContent =
         "Es fehlen Bestellinformationen in der URL. Bitte prüfe deine E-Mail – dort findest du deinen Download-Link.";
     }
-    if (link) {
-      link.textContent = "Download-Link per E-Mail prüfen";
-      link.removeAttribute("href");
+    if (downloadLink) {
+      downloadLink.textContent = "Download-Link per E-Mail prüfen";
+      downloadLink.removeAttribute("href");
+    }
+    if (redirectRow) {
+      redirectRow.style.display = "none";
     }
     return;
   }
 
+  // Download-URL zum Backend
   const downloadUrl =
     backendBase.replace(/\/$/, "") +
     "/download/" +
@@ -300,24 +307,30 @@ slug = "thank-you"
     "?session_id=" +
     encodeURIComponent(sessionId);
 
-  const link = document.getElementById("download-link");
-  if (link) {
-    link.href = downloadUrl;
+  // Sichtbarer Download-Button (Fallback)
+  if (downloadLink) {
+    downloadLink.href = downloadUrl;
+    downloadLink.setAttribute("download", pack + ".zip");
   }
 
-  // Auto-Download nach kurzer Zeit
-  setTimeout(function () {
-    window.location.href = downloadUrl;
-  }, 1500);
+  // Auto-Download via verstecktem iframe (Seite bleibt sichtbar)
+  try {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = downloadUrl;
+    document.body.appendChild(iframe);
+  } catch (err) {
+    console.error("Auto-download iframe error:", err);
+    // Fallback: voller Redirect, falls iframe blockiert
+    setTimeout(function () {
+      window.location.href = downloadUrl;
+    }, 1500);
+  }
 
-  // Redirect zurück zum Blog (nach 45s, wenn nicht abgebrochen)
-  const redirectTotal = 45;
-  let remaining = redirectTotal;
+  // 45s Redirect zurück zur Startseite, wenn nicht abgebrochen
+  let remaining = 45;
   let cancelled = false;
 
-  const counterEl = document.getElementById("redirect-counter");
-  const rowEl = document.getElementById("redirect-row");
-  const cancelBtn = document.getElementById("redirect-cancel");
   if (counterEl) counterEl.textContent = String(remaining);
 
   const timer = setInterval(function () {
@@ -337,8 +350,8 @@ slug = "thank-you"
   if (cancelBtn) {
     cancelBtn.addEventListener("click", function () {
       cancelled = true;
-      if (rowEl) {
-        rowEl.textContent =
+      if (redirectRow) {
+        redirectRow.textContent =
           "You’ll stay on this page. Feel free to explore your new pack!";
       }
     });
