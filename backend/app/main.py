@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+from .api import payments, webhooks, metrics
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -31,6 +32,7 @@ app.add_middleware(
 # ------------------------------------------------------
 app.include_router(payments.router)
 app.include_router(webhooks.router)
+app.include_router(metrics.router)
 
 
 @app.on_event("startup")
