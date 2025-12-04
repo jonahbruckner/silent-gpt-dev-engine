@@ -6,3 +6,9 @@
 [build.environment]
   HUGO_VERSION = "0.134.0"
   HUGO_ENV = "production"
+
+[[redirects]]
+  from = "/thank-you/"
+  to = "/en/thank-you/"
+  status = 301
+  force = true
