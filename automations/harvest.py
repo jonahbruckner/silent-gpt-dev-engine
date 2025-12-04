@@ -1,70 +1,71 @@
-import os
-import sys
-from typing import List
+#!/usr/bin/env python3
+"""
+Harvests new questions/issues into data/harvest/questions.jsonl.
 
-ROOT_DIR = os.path.dirname(os.path.dirname(__file__))   # silent-gpt-dev-engine/
-BACKEND_DIR = os.path.join(ROOT_DIR, "backend")
-sys.path.insert(0, BACKEND_DIR)
+This version does NOT use SQLModel/DB anymore.
+It simply loads new raw questions from data/raw_questions/YYYY-MM-DD/
+and appends them to questions.jsonl.
+"""
 
-import requests
-from sqlmodel import select
-from app.db import get_session
-from app.models.content import RawQuestion
+import json
+from pathlib import Path
+from datetime import datetime
 
-from app.db import init_db
-init_db()
-
-STACKOVERFLOW_BASE = "https://api.stackexchange.com/2.3/questions"
-TAGS: List[str] = ["python", "fastapi", "docker", "asyncio"]
+ROOT = Path(__file__).resolve().parents[1]
+RAW_DIR = ROOT / "data" / "raw_questions"
+HARVEST_FILE = ROOT / "data" / "harvest" / "questions.jsonl"
 
 
-def fetch_questions_for_tag(tag: str, pagesize: int = 20):
-    params = {
-        "order": "desc",
-        "sort": "creation",
-        "tagged": tag,
-        "site": "stackoverflow",
-        "pagesize": pagesize,
-        "filter": "default",
-    }
-    resp = requests.get(STACKOVERFLOW_BASE, params=params, timeout=15)
-    resp.raise_for_status()
-    data = resp.json()
-    return data.get("items", [])
+def load_existing_ids():
+    """Return all original_id already stored in questions.jsonl."""
+    if not HARVEST_FILE.exists():
+        return set()
+
+    ids = set()
+    with HARVEST_FILE.open("r", encoding="utf-8") as f:
+        for line in f:
+            try:
+                obj = json.loads(line)
+                if "original_id" in obj:
+                    ids.add(obj["original_id"])
+            except:
+                pass
+    return ids
+
+
+def harvest_today():
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    day_dir = RAW_DIR / today
+
+    if not day_dir.exists():
+        print(f"[harvest] No raw questions for today: {day_dir}")
+        return []
+
+    items = []
+    for file in sorted(day_dir.glob("*.json")):
+        obj = json.loads(file.read_text(encoding="utf-8"))
+        items.append(obj)
+
+    print(f"[harvest] Loaded {len(items)} raw items for {today}")
+    return items
+
+
+def append_new_items(new_items, existing_ids):
+    added = 0
+    with HARVEST_FILE.open("a", encoding="utf-8") as f:
+        for item in new_items:
+            oid = item.get("original_id")
+            if oid not in existing_ids:
+                f.write(json.dumps(item, ensure_ascii=False) + "\n")
+                added += 1
+    print(f"[harvest] Added {added} new items.")
+    return added
 
 
 def run():
-    with get_session() as session:
-        for tag in TAGS:
-            print(f"[harvest] Fetching questions for tag={tag}")
-            items = fetch_questions_for_tag(tag)
-
-            for q in items:
-                source_id = str(q["question_id"])
-
-                # Skip if already stored
-                existing = session.exec(
-                    select(RawQuestion).where(
-                        RawQuestion.source == "stackoverflow",
-                        RawQuestion.source_id == source_id,
-                    )
-                ).first()
-                if existing:
-                    continue
-
-                raw = RawQuestion(
-                    source="stackoverflow",
-                    source_id=source_id,
-                    title=q.get("title", ""),
-                    body=q.get("body", "") or q.get("body_markdown", "") or "",
-                    tags=",".join(q.get("tags", [])),
-                    url=q.get("link", ""),
-                    status="new",
-                )
-                session.add(raw)
-
-        session.commit()
-        print("[harvest] Done.")
+    existing = load_existing_ids()
+    new_items = harvest_today()
+    append_new_items(new_items, existing)
 
 
 if __name__ == "__main__":
