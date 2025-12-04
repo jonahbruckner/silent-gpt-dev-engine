@@ -1,3 +1,4 @@
+# backend/app/api/metrics.py
 import json
 from pathlib import Path
 from fastapi import APIRouter, HTTPException
@@ -12,6 +13,10 @@ EVENTS_FILE = METRICS_DIR / "stripe_events.jsonl"
 
 @router.get("/sales")
 def get_sales_summary():
+    """
+    Liefert Aggregat pro Pack aus sales_by_pack.json.
+    Struktur: { pack_slug: { total_sales, total_amount, currency, last_sale_at, ... }, ... }
+    """
     if not SALES_FILE.exists():
         return {}
 
@@ -24,6 +29,9 @@ def get_sales_summary():
 
 @router.get("/events/latest")
 def get_latest_events(limit: int = 10):
+    """
+    Gibt die letzten Stripe-Events aus stripe_events.jsonl zurück.
+    """
     if not EVENTS_FILE.exists():
         return []
 

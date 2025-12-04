@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SilentGPT – Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Minimal Tailwind via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js für Umsatz-Chart -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <header class="mb-8 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight">SilentGPT – Admin Dashboard</h1>
+        <p class="text-slate-400 text-sm mt-1">
+          Live-Übersicht über Verkäufe deiner Packs (nur basierend auf Stripe-Webhooks).
+        </p>
+      </div>
+      <div class="text-right">
+        <p class="text-xs text-slate-500">Backend:</p>
+        <p id="backend-url" class="text-sm font-mono text-emerald-300"></p>
+      </div>
+    </header>
+
+    <!-- KPI Cards -->
+    <section class="grid gap-4 md:grid-cols-3 mb-8">
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4">
+        <p class="text-slate-400 text-xs uppercase tracking-wide">Gesamtumsatz</p>
+        <p id="kpi-total-revenue" class="text-2xl font-semibold mt-2">–</p>
+      </div>
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4">
+        <p class="text-slate-400 text-xs uppercase tracking-wide">Gesamtverkäufe</p>
+        <p id="kpi-total-sales" class="text-2xl font-semibold mt-2">–</p>
+      </div>
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4">
+        <p class="text-slate-400 text-xs uppercase tracking-wide">Packs mit Verkäufen</p>
+        <p id="kpi-pack-count" class="text-2xl font-semibold mt-2">–</p>
+      </div>
+    </section>
+
+    <!-- Chart + Tabelle -->
+    <section class="grid gap-6 md:grid-cols-3 items-start mb-10">
+      <div class="md:col-span-2 bg-slate-900/70 border border-slate-800 rounded-2xl p-4">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-lg font-semibold">Umsatz nach Pack</h2>
+          <p class="text-xs text-slate-500">Summe in EUR</p>
+        </div>
+        <canvas id="revenueChart" class="mt-2"></canvas>
+      </div>
+
+      <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 max-h-[340px] overflow-auto">
+        <h2 class="text-lg font-semibold mb-2">Packs (Detail)</h2>
+        <table class="w-full text-sm">
+          <thead class="text-xs text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="text-left py-1 pr-2">Pack</th>
+              <th class="text-right py-1 px-2">Sales</th>
+              <th class="text-right py-1 pl-2">Umsatz</th>
+            </tr>
+          </thead>
+          <tbody id="pack-table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Letzte Events -->
+    <section class="bg-slate-900/70 border border-slate-800 rounded-2xl p-4 mb-10">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold">Letzte Stripe-Events</h2>
+        <button id="refresh-btn" class="text-xs px-3 py-1 rounded-full border border-slate-700 hover:border-emerald-400 hover:text-emerald-300 transition">
+          Refresh
+        </button>
+      </div>
+      <div id="events-list" class="space-y-2 text-sm"></div>
+    </section>
+
+    <footer class="text-xs text-slate-500 border-t border-slate-900 pt-4">
+      SilentGPT Dev Engine – Internal Admin · Built for one thing: clarity.
+    </footer>
+  </div>
+
+  <script>
+    // TODO: optional: aus Config ziehen.
+    const BACKEND_BASE_URL = "https://silent-gpt-dev-engine.onrender.com";
+
+    document.getElementById("backend-url").textContent = BACKEND_BASE_URL;
+
+    let revenueChart = null;
+
+    async function fetchJSON(url) {
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Request failed: " + res.status + " " + res.statusText);
+      }
+      return res.json();
+    }
+
+    function formatEuro(cents, currency = "eur") {
+      const amount = (cents || 0) / 100;
+      return new Intl.NumberFormat("de-DE", {
+        style: "currency",
+        currency: (currency || "eur").toUpperCase(),
+      }).format(amount);
+    }
+
+    function renderKPIs(salesData) {
+      let totalRevenue = 0;
+      let totalSales = 0;
+      let packCount = 0;
+
+      for (const [slug, stats] of Object.entries(salesData)) {
+        packCount += 1;
+        totalRevenue += stats.total_amount || 0;
+        totalSales += stats.total_sales || 0;
+      }
+
+      document.getElementById("kpi-total-revenue").textContent =
+        formatEuro(totalRevenue);
+      document.getElementById("kpi-total-sales").textContent =
+        totalSales.toString();
+      document.getElementById("kpi-pack-count").textContent =
+        packCount.toString();
+    }
+
+    function renderRevenueChart(salesData) {
+      const ctx = document.getElementById("revenueChart").getContext("2d");
+      const labels = [];
+      const values = [];
+
+      for (const [slug, stats] of Object.entries(salesData)) {
+        labels.push(slug);
+        values.push((stats.total_amount || 0) / 100);
+      }
+
+      if (revenueChart) {
+        revenueChart.destroy();
+      }
+
+      revenueChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Umsatz (EUR)",
+              data: values,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              ticks: { color: "#cbd5f5" },
+              grid: { display: false },
+            },
+            y: {
+              ticks: { color: "#cbd5f5" },
+              grid: { color: "rgba(148, 163, 184, 0.3)" },
+            },
+          },
+          plugins: {
+            legend: {
+              labels: { color: "#e5e7eb" },
+            },
+          },
+        },
+      });
+    }
+
+    function renderPackTable(salesData) {
+      const tbody = document.getElementById("pack-table-body");
+      tbody.innerHTML = "";
+
+      const entries = Object.entries(salesData).sort(
+        (a, b) => (b[1].total_amount || 0) - (a[1].total_amount || 0)
+      );
+
+      for (const [slug, stats] of entries) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="py-1 pr-2 align-top font-mono text-xs text-slate-300">${slug}</td>
+          <td class="py-1 px-2 align-top text-right">${stats.total_sales || 0}</td>
+          <td class="py-1 pl-2 align-top text-right">${formatEuro(
+            stats.total_amount || 0,
+            stats.currency || "eur"
+          )}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      if (entries.length === 0) {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td colspan="3" class="py-2 text-center text-slate-500">
+            Noch keine Verkäufe erfasst.
+          </td>
+        `;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function renderEvents(events) {
+      const container = document.getElementById("events-list");
+      container.innerHTML = "";
+
+      if (!events.length) {
+        container.innerHTML =
+          '<p class="text-slate-500">Noch keine Events erfasst.</p>';
+        return;
+      }
+
+      const latestFirst = [...events].reverse();
+
+      for (const ev of latestFirst) {
+        const div = document.createElement("div");
+        div.className =
+          "border border-slate-800 rounded-xl px-3 py-2 flex justify-between gap-3";
+        div.innerHTML = `
+          <div class="text-xs">
+            <div class="font-mono text-emerald-300">${ev.event_type || "?"}</div>
+            <div class="text-slate-400">
+              Pack:
+              <span class="font-mono text-slate-200">${
+                ev.pack_slug || "-"
+              }</span>
+            </div>
+            <div class="text-slate-500">
+              Session:
+              <span class="font-mono">${(ev.session_id || "").slice(
+                0,
+                12
+              )}...</span>
+            </div>
+          </div>
+          <div class="text-xs text-right">
+            <div class="text-slate-300">${formatEuro(
+              ev.amount_total || 0,
+              ev.currency || "eur"
+            )}</div>
+            <div class="text-slate-500 mt-1">
+              ${ev.created_at ? new Date(ev.created_at).toLocaleString() : "-"}
+            </div>
+          </div>
+        `;
+        container.appendChild(div);
+      }
+    }
+
+    async function loadDashboard() {
+      try {
+        const [salesData, events] = await Promise.all([
+          fetchJSON(BACKEND_BASE_URL + "/metrics/sales"),
+          fetchJSON(BACKEND_BASE_URL + "/metrics/events/latest?limit=20"),
+        ]);
+
+        renderKPIs(salesData);
+        renderRevenueChart(salesData);
+        renderPackTable(salesData);
+        renderEvents(events);
+      } catch (err) {
+        console.error("Error loading dashboard:", err);
+        alert("Fehler beim Laden der Metrics. Check Backend-URL / CORS.");
+      }
+    }
+
+    document.getElementById("refresh-btn").addEventListener("click", loadDashboard);
+
+    // Initial load
+    loadDashboard();
+  </script>
+</body>
+</html>
