@@ -71,6 +71,12 @@ def main():
     # 7) Downloads (ZIPs) für alle Packs generieren
     run_step("build_download_zips", ["python", "automations/build_download_zips.py"])
 
+    # 8) Cleanup: Runtime-Artefakte entfernen, aber Zips/Pack-JSONs behalten
+    run_step(
+        "cleanup_generated_content",
+        ["python", "automations/cleanup_generated_content.py"],
+    )
+
     logger.info("=== Weekly cycle finished successfully ===")
 
 
