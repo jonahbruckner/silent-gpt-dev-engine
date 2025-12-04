@@ -61,7 +61,7 @@ async def create_checkout_and_redirect(
             ],
             metadata={"pack_slug": pack_slug},
             success_url=(
-                f"{PUBLIC_SITE_URL}/thank-you/"
+                f"{PUBLIC_SITE_URL}/en/thank-you/"
                 f"?pack={pack_slug}&session_id={{CHECKOUT_SESSION_ID}}"
             ),
             cancel_url=f"{PUBLIC_SITE_URL}/products/{pack_slug}/",
