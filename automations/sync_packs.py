@@ -14,6 +14,10 @@ Aufruf (vom Ordner `site/` aus):
 
 import json
 from pathlib import Path
+MANUAL_PACK_SLUGS = {
+    "fastapi-backend-pack-1",
+}
+
 
 
 def find_repo_root() -> Path:
@@ -110,6 +114,11 @@ def sync_pack(pack: dict) -> None:
     pack_slug = pack.get("pack_slug")
     if not pack_slug:
         print(f"[sync_packs] Skipping JSON without pack_slug: {pack}")
+        return
+
+    # ⛔ Skip manual packs
+    if pack_slug in MANUAL_PACK_SLUGS:
+        print(f"[sync_packs] Skipping manual pack: {pack_slug}")
         return
 
     md_path = PRODUCTS_DIR / f"{pack_slug}.md"

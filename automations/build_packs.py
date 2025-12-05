@@ -33,6 +33,10 @@ from app.db import get_session
 from app.models.content import ContentItem
 from app.db import init_db
 
+MANUAL_PACK_SLUGS = {
+    "fastapi-backend-pack-1",
+}
+
 # Wohin geschrieben wird
 STATIC_PACKS_DIR = os.path.join(ROOT_DIR, "site", "static", "packs")
 PRODUCTS_DIR = os.path.join(ROOT_DIR, "site", "content", "products")
@@ -241,6 +245,11 @@ def build_packs():
     for tpl in templates:
         topic = tpl.get("topic")
         pack_slug = tpl.get("pack_slug")
+
+    # ⛔ Skip manual packs
+    if pack_slug in MANUAL_PACK_SLUGS:
+        print(f"[build_packs] Skipping manual pack: {pack_slug}")
+        continue
 
         if not topic or not pack_slug:
             print(f"[build_packs] Template missing topic/pack_slug, skipping: {tpl}")
