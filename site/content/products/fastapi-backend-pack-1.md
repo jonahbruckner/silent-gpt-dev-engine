@@ -1,6 +1,7 @@
 ---
 title: "FastAPI Backend Troubleshooting Pack – SilentGPT Edition"
 slug: "fastapi-backend-pack-1"
+stripe_price_id: "price_1Sb2u1J7zn1GTExXxH8aUg6R"
 price: 39
 currency: "EUR"
 description: "Fix your FastAPI backend 2× faster: LLM-Prompts, Debug-Flows und Deployment-Checklisten für echte Fehler aus dem Alltag."
