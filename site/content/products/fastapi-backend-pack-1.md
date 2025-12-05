@@ -81,7 +81,7 @@ Du musst nicht mehr 7 StackOverflow-Threads lesen → du folgst einem geraden Pf
 
 ---
 
-###⚡ 2. Debug-Prompts für LLMs (20+)
+### ⚡ 2. Debug-Prompts für LLMs (20+)
 
 * Speziell formulierte Prompts, damit ChatGPT oder dein Local LLM Fehler systematisch analysiert.
 
