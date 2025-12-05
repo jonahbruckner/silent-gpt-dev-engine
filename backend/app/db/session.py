@@ -1,5 +1,9 @@
 import os
 from sqlmodel import SQLModel, Session, create_engine
+from dotenv import load_dotenv
+
+# Lade .env-Datei aus dem Projekt-Root
+load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -14,11 +18,9 @@ elif DATABASE_URL.startswith("postgresql://") and "+psycopg" not in DATABASE_URL
 
 engine = create_engine(DATABASE_URL, echo=False)
 
-
 def get_session() -> Session:
     """Erzeugt eine SQLModel-Session für alle Jobs."""
     return Session(engine)
-
 
 def init_db() -> None:
     """Erstellt alle Tabellen, falls sie noch nicht existieren."""
