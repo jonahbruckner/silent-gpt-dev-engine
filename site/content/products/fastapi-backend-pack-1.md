@@ -4,7 +4,7 @@ slug: "fastapi-backend-pack-1"
 stripe_price_id: "price_1Sb2u1J7zn1GTExXxH8aUg6R"
 price: 39
 currency: "EUR"
-description: "Fix your FastAPI backend 2× faster: LLM-Prompts, Debug-Flows und Deployment-Checklisten für echte Fehler aus dem Alltag."
+description: "Fix FastAPI deployment & debug errors in minutes — not hours."
 tags:
   - fastapi
   - python
@@ -24,31 +24,21 @@ use_cases:
   - "Du deployst eine FastAPI-App auf Render/Heroku und bekommst nur 500er-Fehler."
   - "Deine DB-Verbindung mit SQLModel bricht ständig weg oder wirft kryptische Fehler."
   - "Du vergeudest Stunden damit, Stacktraces zu lesen und Foren zu durchsuchen."
-long_description: |
-  Du baust produktive FastAPI-Backends – aber jeder neue Fehler frisst dir wieder Stunden:
-  Uvicorn-Startup-Errors, SQLModel-Connection-Issues, Render-Deploy-500er, kaputte ENV-Configs.
-
-  Dieses Pack bündelt genau die Debug-Flows, LLM-Prompts und Checklisten,
-  die dir helfen, echte FastAPI-Probleme systematisch und reproduzierbar zu lösen.
----
-
-## Fix your FastAPI backend 2× faster
-
-Du kennst das:
-
-- Du deployst eine FastAPI-App, und Uvicorn wirft einen 500er oder `ImportError`.
-- `DATABASE_URL is not set` – du änderst ENV-Variablen, aber nichts funktioniert.
-- SQLModel/SQLAlchemy melden Connection- oder Migration-Issues, und du tappst im Dunkeln.
-- Render/Heroku-Deploy bricht ab, Logs sind voll, aber dir fehlt ein klarer Startpunkt.
-
-Jede dieser Situationen frisst dir 1–3 Stunden – obwohl der eigentliche Bug oft trivial ist.
-
-Dieses Pack dreht den Spieß um:
-Du bekommst eine Sammlung aus **vorgefertigten Troubleshooting-Flows, LLM-Prompts und Checklisten**, mit denen du Fehler viel schneller eingrenzen kannst.
 
 ---
 
-## Was du konkret bekommst
+## Fix FastAPI deployment & debug errors in minutes — not hours.
+
+Uvicorn startup crashes, SQLModel connection issues, Render/Heroku 500s, broken `.env` configs —  
+this pack gives you **clear, repeatable troubleshooting flows** that cut your debugging time in half.
+
+**Get 15+ Troubleshooting Flows, 20+ LLM Debug Prompts & Deployment Checklists.**
+
+[👉 Buy now — start fixing faster](#checkout)
+
+---
+
+## Was ist im Pack enthalten?
 
 ### 🔥 1. Troubleshooting-Flows (15+)
 
