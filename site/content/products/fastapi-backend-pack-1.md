@@ -50,54 +50,111 @@ Du bekommst eine Sammlung aus **vorgefertigten Troubleshooting-Flows, LLM-Prompt
 
 ## Was du konkret bekommst
 
-**1. Troubleshooting-Flows (15+)**  
-Schritt-für-Schritt Flows für typische FastAPI-Probleme, z. B.:
+### 🔥 1. Troubleshooting-Flows (15+)
 
-- `DATABASE_URL is not set` / DB-Connect schlägt fehl
-- Uvicorn-Startup-Error (Import/Module/Path)
-- 500er nach Deploy auf Render/Heroku/VPS
-- CORS-Fehler in FastAPI-APIs
-- Migrations-Bugs mit SQLModel/SQLAlchemy
+* Strukturierte Debug-Flows für die häufigsten FastAPI-Probleme – jeder mit klaren Entscheidungswegen („Wenn das → dann das“).
 
-Jeder Flow ist so aufgebaut:
-1. Symptome / typische Log-Ausgaben
-2. Sofort-Checks (Konfiguration, ENV, Start-Command)
-3. Systematische Eingrenzung (was du als Nächstes prüfst)
-4. „If that, then this“-Entscheidungsbaum
+* DATABASE_URL is not set – Diagnose & Fix
 
----
+* SQLModel/SQLAlchemy Connection Errors
 
-**2. LLM-Prompts für Debugging (20+)**
+* Uvicorn Startup Errors (Import/Module/Path/Syntax)
 
-Fertige Prompt-Bausteine für ChatGPT / Local LLM, u. a.:
+* Internal Server Error nach Render/Heroku Deploy
 
-- „Analysiere diesen Uvicorn-Trace und gib mir die 3 wahrscheinlichsten Ursachen + Fix-Strategien.“
-- „Ich bekomme diesen SQLModel-Fehler – welche Config- oder Migrationsprobleme kommen dafür realistisch in Frage?“
-- „Ich deployst auf Render und sehe diesen Log-Ausschnitt – sag mir, welche ENV/Build/Start-Fehler hier typisch sind.“
+* Fehlkonfigurationen in Settings / .env
 
-Die Prompts sind so formuliert, dass sie dem Model **kontext geben**:
-Stacktrace, Config, ENV – nicht nur „hilfe kaputt“.
+* CORS-Probleme bei APIs
 
----
+* Static Files liefern 404
 
-**3. Code-Patterns & Snippets (5–10)**
+* Background Tasks laufen nicht
 
-Kurz und einsatzbereit:
+* Lifespan / Startup Events werden nicht ausgeführt
 
-- Sauberes DB-Session-Handling mit SQLModel/SessionLocal
-- Settings-/Config-Struktur mit `.env` + Pydantic (oder BaseSettings)
-- Logging-Setup für FastAPI (damit du im Fehlerfall mehr als nur „500“ siehst)
-- Healthcheck-/Status-Endpoint, um Deployments zu prüfen
+* Postgres TLS / Timeout Bugs
+
+* Render Worker/Reload Probleme
+
+**Warum das wichtig ist:**
+Du musst nicht mehr 7 StackOverflow-Threads lesen → du folgst einem geraden Pfad.
 
 ---
 
-**4. Deployment- & ENV-Checklisten (3–5)**
+###⚡ 2. Debug-Prompts für LLMs (20+)
 
-Kurze, brutale Checklisten für:
+* Speziell formulierte Prompts, damit ChatGPT oder dein Local LLM Fehler systematisch analysiert.
 
-- Render / Heroku (ENV, Build Command, Start Command, DATABASE_URL, Migrations)
-- Lokale Dev-Umgebung vs. Prod (was unterschiedlich sein darf, was nicht)
-- Typische Stolperfallen mit `postgres://` vs `postgresql+psycopg://` usw.
+* „Analysiere diesen Uvicorn-Trace → 3 Hauptursachen + Fix“
+
+* „Welche Config-Probleme erklären diesen SQLModel-Error?“
+
+* „Erstelle eine Debug-Checkliste basierend auf diesem FastAPI-Log“
+
+* „Welche ENV-Variablen fehlen hier?“
+
+* „Gib mir eine Schritt-für-Schritt Diagnose für diesen Fehler“
+
+**Warum das wichtig ist:**
+LLMs sind mächtig – wenn man ihnen den Kontext richtig gibt.
+Diese Prompts machen den Unterschied zwischen „ratet“ vs. „liefert Ergebnisse“.
+
+---
+
+### 🧩 3. Code Patterns & Snippets (10+)
+
+* Kurz, wiederverwendbar, ohne Overengineering.
+
+* Sauberes SQLModel Session Handling (SessionLocal)
+
+* Settings/Config mit Pydantic BaseSettings
+
+* Logging Setup für Produktion
+
+* Robust Exception Handling
+
+* Healthcheck-Endpoint
+
+* Lifespan-Pattern für sauber startende Services
+
+**Warum das wichtig ist:**
+Einige deiner häufigsten Bugs kommen nicht durch Fehler im Code → sondern durch fehlende Strukturen. Diese Patterns verhindern genau das.
+
+---
+
+### 🚀 4. Deployment- & ENV-Checklisten
+
+* Für Render, Heroku und VPS-Deployments.
+
+* Richtige Build-/Start-Commands
+
+* ENV-Setup (Pflichtvariablen + typische Fallen)
+
+* DB-URL Normalisierung (postgres:// → postgresql+psycopg://)
+
+* Coldstart Debugging
+
+* Worker/Reload Verhalten richtig setzen
+
+**Warum das wichtig ist:**
+80 % der FastAPI-Fehler passieren beim Deployment – nicht im lokalen Code.
+
+---
+
+### 🎁 5. Bonus: „First-Aid Prompt Kit“
+
+* Die 8 wichtigsten Prompts für jedes unbekannte Backend-Problem.
+
+* Schnell-Diagnose
+
+* Strukturierte Fehler-Aufarbeitung
+
+* „Was fehlt mir hier?“–Analyse
+
+* Quick-Refactor Prompt
+
+**Warum das wichtig ist:**
+Damit hast du immer einen Notfall-Rettungsring, selbst bei Fehlern, die du noch nie gesehen hast.
 
 ---
 
