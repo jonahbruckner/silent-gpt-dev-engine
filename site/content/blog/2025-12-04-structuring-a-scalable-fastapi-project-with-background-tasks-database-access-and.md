@@ -284,3 +284,18 @@ async def register_user(email: str, name: str, db: AsyncSession = Depends(get_db
 Structuring a FastAPI project for scalability involves clear separation of concerns, effective use of dependency injection, and thoughtful handling of background tasks and database access. By organizing your code into well-defined modules, managing database sessions with dependencies, and offloading long-running jobs to background workers, you can build maintainable and performant APIs that scale with your needs.
 
 This approach not only improves code clarity but also makes your application easier to test and extend as it grows. Start small, keep your layers clean, and leverage FastAPI’s powerful features to their fullest.
+
+---
+
+## Want more production-ready FastAPI patterns?
+
+If you liked this article and you’re actively building FastAPI services, you might find the **FastAPI Backend Pack #1** useful.
+
+It’s a curated bundle of real-world patterns around:
+
+- Project structure for larger FastAPI services  
+- Async SQLAlchemy sessions & dependency injection  
+- Background tasks and offloading slow work  
+- Avoiding common “works locally, breaks in prod” pitfalls  
+
+👉 Check it out here: [/products/fastapi-backend-pack-1/](/products/fastapi-backend-pack-1/)
